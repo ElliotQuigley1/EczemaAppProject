@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">calendarattempt4</string>
+    <string name="go">go</string>
+    <string name="date">date</string>
+    <string name="go_to_calendar">go_to_calendar</string>
+    <string name="body_parts">BODY PARTS</string>
+    <string name="symptoms">SYMPTOMS</string>
+    <string name="meds">MEDS</string>
+    <string name="change_image">Change Image</string>
+    <string name="foto_cracking">TODO</string>
+    <string name="dry">TODO</string>
+</resources>
