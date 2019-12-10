@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ImageView;
 
@@ -40,12 +41,22 @@ public class CalendarActivity extends AppCompatActivity {
     private static ImageView itchy;
     private static ImageView itchy_click;
 
+    private static ImageView medicine;
+    private static ImageView medicine_click;
+
+    private static ImageView ointment;
+    private static ImageView ointment_click;
+
+    private Button takephoto;
+
     private int current_image;
     private int current_image_dry;
     private int current_image_oozing;
     private int current_image_bleeding;
     private int current_image_flaking;
     private int current_image_itchy;
+    private int current_image_medicine;
+    private int current_image_ointment;
 
     int[] images={R.drawable.cracking,R.drawable.cracking_clicked};
     int[] images_dry={R.drawable.dry,R.drawable.dry_clicked};
@@ -53,6 +64,8 @@ public class CalendarActivity extends AppCompatActivity {
     int[] images_bleeding={R.drawable.bleeding,R.drawable.bleeding_ticked};
     int[] images_flaking={R.drawable.flaking,R.drawable.flaking_clicked};
     int[] images_itchy={R.drawable.itchy,R.drawable.itchy_ticked};
+    int[] images_medicine={R.drawable.medicine,R.drawable.medicine_clicked};
+    int[] images_ointment={R.drawable.ointment,R.drawable.ointment_clicked};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +77,9 @@ public class CalendarActivity extends AppCompatActivity {
         buttonclick_bleeding();
         buttonclick_flaking();
         buttonclick_itchy();
+        buttonclick_medicine();
+        buttonclick_ointment();
+        takephoto = (Button) findViewById(R.id.takephoto);
 
         mCalendarView = findViewById(R.id.smth);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
@@ -79,6 +95,14 @@ public class CalendarActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void takephoto(View view) {
+        Intent intent = new Intent(CalendarActivity.this, MainActivity.class);
+
+        startActivity(intent);
+    }
+
+
     public void Go(View view) {
         Intent intent = new Intent(CalendarActivity.this, MainActivity.class);
 
@@ -168,14 +192,44 @@ public class CalendarActivity extends AppCompatActivity {
         itchy=findViewById(R.id.imageView_itchy);
         itchy_click=findViewById(R.id.imageView_itchy);
         itchy_click.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View view){
-                                             current_image_itchy++;
-                                             current_image_itchy=current_image_itchy % images_itchy.length;
-                                             itchy.setImageResource(images_itchy[current_image_itchy]);
+                                           @Override
+                                           public void onClick(View view){
+                                               current_image_itchy++;
+                                               current_image_itchy=current_image_itchy % images_itchy.length;
+                                               itchy.setImageResource(images_itchy[current_image_itchy]);
 
-                                         }
-                                     }
+                                           }
+                                       }
+        );
+    }
+
+    public void buttonclick_medicine(){
+        medicine=findViewById(R.id.imageView_medicine);
+        medicine_click=findViewById(R.id.imageView_medicine);
+        medicine_click.setOnClickListener(new View.OnClickListener() {
+                                           @Override
+                                           public void onClick(View view){
+                                               current_image_medicine++;
+                                               current_image_medicine=current_image_medicine % images_medicine.length;
+                                               medicine.setImageResource(images_medicine[current_image_medicine]);
+
+                                           }
+                                       }
+        );
+    }
+
+    public void buttonclick_ointment(){
+        ointment=findViewById(R.id.imageView_ointment);
+        ointment_click=findViewById(R.id.imageView_ointment);
+        ointment_click.setOnClickListener(new View.OnClickListener() {
+                                           @Override
+                                           public void onClick(View view){
+                                               current_image_ointment++;
+                                               current_image_ointment=current_image_ointment % images_ointment.length;
+                                               ointment.setImageResource(images_ointment[current_image_ointment]);
+
+                                           }
+                                       }
         );
     }
 }

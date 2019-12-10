@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView thedate;
     private Button btngocalendar;
-    private Button btnhist2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         thedate = (TextView) findViewById(R.id.date);
         btngocalendar = (Button) findViewById(R.id.btngocalendar);
-        btnhist2 = (Button) findViewById(R.id.button2);
+
 
         Intent incoming = getIntent();
         String date = incoming.getStringExtra("date");
@@ -53,13 +53,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnhist2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ActivityOptions.class);
-                startActivity(intent);
-            }
-        });
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
