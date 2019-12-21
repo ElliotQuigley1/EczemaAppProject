@@ -20,9 +20,11 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.calendarattempt4.MainActivity">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.calendarattempt4.MainActivity"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="58dp">
 
         <TextView
             android:id="@+id/date"
@@ -41,16 +43,37 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.604" />
 
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.81" />
+
         <Button
-        android:id="@+id/btngocalendar"
-        android:layout_width="265dp"
-        android:layout_height="75dp"
-        android:layout_marginTop="128dp"
-        android:text="@string/go_to_calendar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.424"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/btngocalendar"
+            android:layout_width="265dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="128dp"
+            android:text="@string/go_to_calendar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.424"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/Score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Score:"
+            android:textSize="45sp"
+            tools:layout_editor_absoluteX="142dp"
+            tools:layout_editor_absoluteY="224dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
