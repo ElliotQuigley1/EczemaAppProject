@@ -39,28 +39,14 @@ public class CalendarActivity extends AppCompatActivity {
     private static final String TAG = "CalendarActivity";
     private CalendarView mCalendarView;
     private String date_chosen;
+
     private static ImageView imgview;
-    private static ImageView imgview2;
-
-    private static ImageView dry;
     private static ImageView dry_click;
-
-    private static ImageView oozing;
     private static ImageView oozing_click;
-
-    private static ImageView bleeding;
     private static ImageView bleeding_click;
-
-    private static ImageView flaking;
     private static ImageView flaking_click;
-
-    private static ImageView itchy;
     private static ImageView itchy_click;
-
-    private static ImageView medicine;
     private static ImageView medicine_click;
-
-    private static ImageView ointment;
     private static ImageView ointment_click;
 
     private Button takephoto;
@@ -101,7 +87,9 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_layout);
-        this.imageView = (ImageView)this.findViewById(R.id.imageView2);
+
+        //this.imageView = (ImageView)this.findViewById(R.id.imageView2);
+
         Button photoButton = (Button) this.findViewById(R.id.takephoto);
         photoButton.setOnClickListener(new View.OnClickListener()
         {
@@ -253,6 +241,8 @@ public class CalendarActivity extends AppCompatActivity {
         try {MainActivity.makeDay(score);} catch (SQLException e) {e.printStackTrace();}
         startActivity(intent);
     }
+
+
     public void Logo(View view){
         Intent intent = new Intent(CalendarActivity.this, ActivityOptions.class);
         startActivity(intent);
