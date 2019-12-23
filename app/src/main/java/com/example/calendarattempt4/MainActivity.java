@@ -23,6 +23,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.CalendarView;
 import android.widget.TextView;
 
@@ -30,7 +31,9 @@ import java.util.Random;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -46,15 +49,17 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.SQLException;
 import java.util.Date;
 
 import static java.time.LocalDate.now;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private DrawerLayout drawer;
     // Declares view objects
     private TextView thedate;
     private TextView score;
@@ -62,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
     // Initialises objects
     public Database db = new Database();
     static Statement s = null;
-    static parent P = new parent();
+    static parent P = new parent(); // THIS LINE CREATES PARENT OBJECT BASED ON HARDCODED USERNAME PASSWORD AND ID
+    // WILL BE MODIFIED TO GENUINE LOG IN, SEE PARENT() INSIDE PARENT.JAVA
     static child C = new child();
     static day D = new day();
     // Gets current date when user opens app
@@ -75,52 +81,37 @@ public class MainActivity extends AppCompatActivity {
     private double[]  x_array = new double[300];
     private double[]  y_array = new double[300];
 
-    public void main(String[] args) throws SQLException, IOException {
-
-    }
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Connects Database and displays current day data
+        // Connects Database and displays current date data
         if (db.connect()) {
             s = db.getConnection();
+            // Passes on Statement s to parent
             P.connect(s);
             try {
+                // Passes on Statement s to child and selects CID depending on selected child
                 selectChild_button(1);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
                 String date_chosen = sdf.format(nowday);
-                checkDay_on_state_change(date_chosen);
+                checkDay_on_state_change(date_chosen); // can remove????????
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            //System.out.println("DB Statement:\t" + s);
         } else {
-            System.out.println("CANNOT CONNECT DB");
+            Toast.makeText(this, "CANNOT CONNECT DB", Toast.LENGTH_SHORT).show();
         }
 
 
-
-        // Sets calendar button
-        btngocalendar = (Button) findViewById(R.id.btngocalendar);
-        btngocalendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-
+        // Initialises toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        // Initialises Navigation drawer
+        drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -132,14 +123,13 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        navigationView.setNavigationItemSelectedListener(this);
 
-
-        // we get graph view instance
+        // Initialises graph view
         GraphView graph = (GraphView) findViewById(R.id.graph);
-        // data
         series = new LineGraphSeries<DataPoint>();
         graph.addSeries(series);
-        // customize a little bit viewport
+        // Customize graph viewport
         Viewport viewport = graph.getViewport();
         viewport.setYAxisBoundsManual(true);
         viewport.setMinY(0);
@@ -152,6 +142,80 @@ public class MainActivity extends AppCompatActivity {
         graph.getGridLabelRenderer().setVerticalAxisTitle("Severity of Eczema (POEM)");
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // NOTE TO SELF: Code here to pass on selected child_num / login from navigation drawer to selectChild_button()
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.nav_home:
+                Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_gallery:
+                Toast.makeText(this, "gallery", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_slideshow:
+                Toast.makeText(this, "slideshow", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_tools:
+                Toast.makeText(this, "tools", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_share:
+                Toast.makeText(this, "share", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_send:
+                Toast.makeText(this, "send", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        drawer.closeDrawer(GravityCompat.START);
+        // Runs
+        // selectChild_button(child_num_from_app);
+        return true;
+    }
+
+    // Runs with child_num_from_app from onNavigationItemSelected() to connect DB with corresponding child_num
+    public static void selectChild_button(int child_num_from_app) throws SQLException {
+        child_num_from_app = 1;
+        C.connect(s, P.parent_ID, child_num_from_app);
+    }
+
+    // NOTE TO SELF: Create signup activity
+    private void signup_button(String userName_from_app, String password_from_app, String email_from_app) throws SQLException {
+        if (P.signup(userName_from_app, password_from_app, email_from_app) == false){
+            Toast.makeText(this, "User already exists" + P.email + ", " + P.username, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Account created", Toast.LENGTH_SHORT).show();
+            /*
+            // Code
+            Prompts makeChild_button activity to create child
+             */
+        }
+    }
+
+    // NOTE TO SELF: Create login activity
+    private void LogIn_button(String userName_from_app, String password_from_app) throws SQLException {
+        if (P.login(userName_from_app, password_from_app) == true){
+            Toast.makeText(this, "LOGGED IN\nUser email:\t" + P.username, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this,"WRONG LOG IN" , Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // NOTE TO SELF: have to create cross checking between DB and navcontroller to display the right amount of children
+    // NOTE TO SELF: Create make_child activity
+    public void makeChild_button(String name_from_app) throws SQLException {
+        if (C.create(name_from_app, P.parent_ID) == false){
+            Toast.makeText(this, "Child already exists:" + name_from_app, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Child created", Toast.LENGTH_SHORT).show();
+            // ASKS FOR CHILDREN INFO
+        }
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // NOTE TO SELF: hardcoded texts and graphs, will be modified to show day info and trend graph
     @Override
     protected void onResume() {
         super.onResume();
@@ -173,24 +237,55 @@ public class MainActivity extends AppCompatActivity {
                 // we add 100 new entries
                 for (int i = 0; i < 50; i++) {
                     runOnUiThread(new Runnable() {
-
                         @Override
                         public void run() {
-                            addEntry();
+                            series.appendData(new DataPoint(lastX++, RANDOM.nextDouble() * 10d), false, 50);
                         }
                     });
-
-                    // sleep to slow down the add of entries
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        // manage error ...
-                    }
                 }
             }
         }).start();
     }
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
+
+
+    // Passes on Statement s to day and retrieve data for selected day
+    public static boolean checkDay_on_state_change(String date) throws SQLException {
+        if (D.check(C.child_ID, P.parent_ID, date, s)){
+            System.out.println("Answers for selected date:\t" + D.answers);
+            // displays at editText on Android Studio
+            return true;
+        } else {
+            System.out.println("This day is empty");
+            return false;
+        }
+    }
+
+    // Create answers for new date
+    public static void makeDay(String newAnswers) throws SQLException {
+        D.create(newAnswers);
+    }
+
+    // Update existing answers
+    public static void rewriteDay(String newAnswers) throws SQLException {
+        D.update(newAnswers);
+    }
+
+    // Sets button action
+    public void calendar_button(View view) {
+        Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+        startActivity(intent);
+    }
+
+
+
+
+
+    // Overrides for Navigation drawer
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -205,7 +300,12 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
+
+
+
+    /*
+        @RequiresApi(api = Build.VERSION_CODES.O)
     public int getScore()throws SQLException {
         int i=0;
 
@@ -217,57 +317,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // add random data to graph
-    private void addEntry() {
-        // here, we choose to display max 10 points on the viewport and we scroll to end
-        //series.appendData(new DataPoint(lastX++, RANDOM.nextDouble() * 10d), false, 50);
-        series.appendData(new DataPoint(lastX++, RANDOM.nextDouble() * 10d), false, 50);
+            // Sets calendar button
+        btngocalendar = (Button) findViewById(R.id.btngocalendar);
+        btngocalendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+                startActivity(intent);
+            }
+        });
 
-    }
+     */
 
-    private static void signup_button(String userName_from_app, String password_from_app, String email_from_app) throws SQLException {
-        if (P.signup(userName_from_app, password_from_app, email_from_app) == false){
-            System.out.println("User already exists" + P.email);
-        } else {
-            System.out.println("Account created");
-            // prompts makeChild_button activity
-        }
-    }
-    private static void LogIn_button(String userName_from_app, String password_from_app) throws SQLException {
-        if (P.login(userName_from_app, password_from_app) == true){
-            System.out.println("LOGGED IN\nUser email:\t" + P.email);
-        } else {
-            System.out.println("WRONG LOG IN");
-        }
-    }
-    public static void makeChild_button(String name_from_app) throws SQLException {
-        if (C.create(name_from_app, P.parent_ID) == false){
-            System.out.println("Child already exists:" + name_from_app);
-        } else {
-            System.out.println("Child created");
-            // ASKS FOR CHILDREN INFO
-        }
-    }
-    public static void selectChild_button(int child_num_from_app) throws SQLException {
-        child_num_from_app = 1;
-        C.connect(s, P.parent_ID, child_num_from_app);
-    }
-    public static boolean checkDay_on_state_change(String date) throws SQLException {
-        if (D.check(C.child_ID, P.parent_ID, date, s)){
-            System.out.println("Answers for selected date:\t" + D.answers);
-            // displays at editText on Android Studio
-            return true;
-        } else {
-            System.out.println("This day is empty");
-            return false;
-        }
-    }
-    public static void makeDay(String newAnswers) throws SQLException {
-        D.create(newAnswers);
-    }
-    public static void rewriteDay(String newAnswers) throws SQLException {
-        D.update(newAnswers);
-    }
+
+
+
+
+
+
+
+
+
+
+
 
     //Image Upload and download
     /*
@@ -308,6 +380,9 @@ public class MainActivity extends AppCompatActivity {
             // write the image to a file
             File outputfile = new File("src/main/resources/myImage.png");
             ImageIO.write(image, "png", outputfile);
+
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
 
         }catch(Exception e) {
             System.out.println(e.getStackTrace());
@@ -402,5 +477,7 @@ public class MainActivity extends AppCompatActivity {
             //System.out.println(stackTrace);
         }
     }
+
+
 }
 

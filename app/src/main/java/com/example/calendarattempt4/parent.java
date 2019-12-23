@@ -3,6 +3,7 @@ package com.example.calendarattempt4;
 import java.sql.*;
 
 public class parent {
+    // Initialises objects
     protected int parent_ID;
     protected String username;
     protected String password;
@@ -11,9 +12,16 @@ public class parent {
     protected int CID_1;
     protected int CID_2;
     protected int CID_3;
-    String AUTH = null;
-    Statement s;
+    // Variable to check if data is returned from database
+    protected String AUTH = null;
+    // Statement to connect to Postgresql
+    protected Statement s;
 
+
+    // HARD CODED DATA
+    // USED FOR DEVELOPMENT
+    // REAL DATA WILL BE OBTAINED WITH PARENT LOG IN
+    // WILL BE DELETED BEFORE SUBMITTING
     public parent(){
         this.parent_ID = 1;
         this.username = "D_username";
@@ -25,10 +33,12 @@ public class parent {
         this.CID_3 = 3;
     }
 
+    // Passes on Statement s to parent
     public void connect(Statement s){
         this.s = s;
     }
 
+    // Retrieves info associated with parent login credentials and return state to main class
     public boolean login(String username, String password) throws SQLException {
         String sqlStr = "SELECT PID, email, Child_num, Child_ID_1, Child_ID_2, Child_ID_3  FROM parents WHERE username =\'"+username+"\' and password = \'"+password+"\';";
         ResultSet rset=s.executeQuery(sqlStr);
@@ -44,12 +54,15 @@ public class parent {
         }
 
         if (AUTH == null){
+            // Returns status to main class to show user message
             return false;
         }else{
+            // Returns status to main class to show user message
             return true;
         }
     }
 
+    // Checks if account already exists and creates new account if not
     public boolean signup(String username, String password, String email) throws SQLException {
         String sqlStr = "SELECT PID FROM parents WHERE username =\'"+username+"\' or email = \'"+email+"\';";
         ResultSet rset=s.executeQuery(sqlStr);
@@ -57,10 +70,12 @@ public class parent {
             AUTH = rset.getString("PID");
         }
         if (AUTH != null){
+            // Returns status to main class to show user message
             return false;
         }else{
             sqlStr = "insert into parents (username,password,email) values(\'"+username+"\',\'"+password+"\',\'"+email+"\');";
             s.execute (sqlStr);
+            // Returns status to main class to show user message
             return true;
         }
     }
