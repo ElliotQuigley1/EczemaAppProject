@@ -54,19 +54,21 @@ import static java.time.LocalDate.now;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private AppBarConfiguration mAppBarConfiguration;
-
+    // Declares view objects
     private TextView thedate;
     private TextView score;
     private Button btngocalendar;
+    // Initialises objects
     public Database db = new Database();
-    static Statement s=null;
+    static Statement s = null;
     static parent P = new parent();
     static child C = new child();
     static day D = new day();
+    // Gets current date when user opens app
     static Date nowday = Calendar.getInstance().getTime();
-
+    static String date = nowday.toString();
+    // Prepares values for graph plotting
     private static final Random RANDOM = new Random();
     protected LineGraphSeries<DataPoint> series;
     private int lastX = 0;
@@ -77,15 +79,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public Database getDB(){return this.db;}
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        // Connects Database and displays current day data
         if (db.connect()) {
             s = db.getConnection();
             P.connect(s);
@@ -93,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 selectChild_button(1);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
                 String date_chosen = sdf.format(nowday);
-
-
                 checkDay_on_state_change(date_chosen);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -105,20 +103,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        s = db.getConnection();
 
-
-        thedate = (TextView) findViewById(R.id.date);
+        // Sets calendar button
         btngocalendar = (Button) findViewById(R.id.btngocalendar);
-
-
-        score = (TextView) findViewById(R.id.Score);
-        score.setText("text you want to display");
-
-        Intent incoming = getIntent();
-        String date = incoming.getStringExtra("date");
-        thedate.setText(date);
-
         btngocalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,14 +118,8 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -151,8 +132,9 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        // we get graph view instance
 
+
+        // we get graph view instance
         GraphView graph = (GraphView) findViewById(R.id.graph);
         // data
         series = new LineGraphSeries<DataPoint>();
@@ -168,6 +150,45 @@ public class MainActivity extends AppCompatActivity {
         viewport.setScalable(true);
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Weeks");
         graph.getGridLabelRenderer().setVerticalAxisTitle("Severity of Eczema (POEM)");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        score = (TextView) findViewById(R.id.score_display);
+        score.setText("text you want to display");
+
+        thedate = (TextView) findViewById(R.id.date);
+        Intent incoming = getIntent();
+        if (incoming.getStringExtra("date") != null){
+            date = incoming.getStringExtra("date");
+        }
+        thedate.setText(date);
+
+        // we're going to simulate real time with thread that append data to the graph
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                // we add 100 new entries
+                for (int i = 0; i < 50; i++) {
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            addEntry();
+                        }
+                    });
+
+                    // sleep to slow down the add of entries
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        // manage error ...
+                    }
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -195,34 +216,6 @@ public class MainActivity extends AppCompatActivity {
         return i;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // we're going to simulate real time with thread that append data to the graph
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                // we add 100 new entries
-                for (int i = 0; i < 50; i++) {
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            addEntry();
-                        }
-                    });
-
-                    // sleep to slow down the add of entries
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        // manage error ...
-                    }
-                }
-            }
-        }).start();
-    }
 
     // add random data to graph
     private void addEntry() {
@@ -259,8 +252,8 @@ public class MainActivity extends AppCompatActivity {
         child_num_from_app = 1;
         C.connect(s, P.parent_ID, child_num_from_app);
     }
-    public static boolean checkDay_on_state_change(String Day_ID) throws SQLException {
-        if (D.check(C.child_ID, P.parent_ID, Day_ID, s)){
+    public static boolean checkDay_on_state_change(String date) throws SQLException {
+        if (D.check(C.child_ID, P.parent_ID, date, s)){
             System.out.println("Answers for selected date:\t" + D.answers);
             // displays at editText on Android Studio
             return true;
@@ -272,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
     public static void makeDay(String newAnswers) throws SQLException {
         D.create(newAnswers);
     }
-    public static void rewriteDay_button(String newAnswers) throws SQLException {
+    public static void rewriteDay(String newAnswers) throws SQLException {
         D.update(newAnswers);
     }
 
