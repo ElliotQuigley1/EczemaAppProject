@@ -55,13 +55,13 @@ import static java.time.LocalDate.now;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    // Assigns view objects
+    // Declares view objects
     private TextView thedate;
     private TextView score;
     private Button btngocalendar;
     // Initialises objects
     public Database db = new Database();
-    static Statement s=null;
+    static Statement s = null;
     static parent P = new parent();
     static child C = new child();
     static day D = new day();
@@ -252,8 +252,8 @@ public class MainActivity extends AppCompatActivity {
         child_num_from_app = 1;
         C.connect(s, P.parent_ID, child_num_from_app);
     }
-    public static boolean checkDay_on_state_change(String Day_ID) throws SQLException {
-        if (D.check(C.child_ID, P.parent_ID, Day_ID, s)){
+    public static boolean checkDay_on_state_change(String date) throws SQLException {
+        if (D.check(C.child_ID, P.parent_ID, date, s)){
             System.out.println("Answers for selected date:\t" + D.answers);
             // displays at editText on Android Studio
             return true;
@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
     public static void makeDay(String newAnswers) throws SQLException {
         D.create(newAnswers);
     }
-    public static void rewriteDay_button(String newAnswers) throws SQLException {
+    public static void rewriteDay(String newAnswers) throws SQLException {
         D.update(newAnswers);
     }
 

@@ -25,13 +25,8 @@ public class day {
         ResultSet rset=s.executeQuery(sqlStr);
         while(rset.next()) {
             this.Day_ID = rset.getInt("DID");
-            this.parent_ID = rset.getInt("PID");
-            this.child_ID = rset.getInt("CID");
-            this.date = date;
             this.answers = rset.getString("Record");
             AUTH = rset.getString("DID");
-            this.answers = rset.getString("Record");
-
         }
         if (AUTH != null){
             return true;
@@ -42,7 +37,7 @@ public class day {
     }
 
     public void update(String answers) throws SQLException {
-        String sqlStr = "UPDATE dates SET Record\'" + answers + "\' WHERE DID = \'" + this.Day_ID +"\';";
+        String sqlStr = "UPDATE dates SET record = \'" + answers + "\' WHERE DID = \'" + this.Day_ID +"\';";
         s.execute (sqlStr);
     }
 

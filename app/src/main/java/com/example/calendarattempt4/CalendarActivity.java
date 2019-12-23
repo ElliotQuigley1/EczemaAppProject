@@ -17,13 +17,8 @@ import java.util.Date;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,61 +30,28 @@ import static com.example.calendarattempt4.MainActivity.checkDay_on_state_change
  */
 
 public class CalendarActivity extends AppCompatActivity {
-
-    private static final String TAG = "CalendarActivity";
+    // Declares view objects
     private CalendarView mCalendarView;
     private String date_chosen;
-
-    private static ImageView imgview;
-    private static ImageView dry_click;
-    private static ImageView oozing_click;
-    private static ImageView bleeding_click;
-    private static ImageView flaking_click;
-    private static ImageView itchy_click;
-    private static ImageView medicine_click;
-    private static ImageView ointment_click;
-
-    private Button takephoto;
-
-    private int current_image;
-    private int current_image_dry;
-    private int current_image_oozing;
-    private int current_image_bleeding;
-    private int current_image_flaking;
-    private int current_image_itchy;
-    private int current_image_medicine;
-    private int current_image_ointment;
-
-    private boolean toggle = true;
-    private boolean toggle_dry = false;
-    private boolean toggle_oozing = false;
-    private boolean toggle_bleeding = false;
-    private boolean toggle_flaking = false;
-    private boolean toggle_itchy = false;
-    private boolean toggle_medicine = false;
-    private boolean toggle_ointment = false;
+    // Declares array for icons state
+    private boolean new_data = true;
     private boolean togglers[] = {false,false,false,false,false,false,false,false};
-
-    int[] images={R.drawable.cracking,R.drawable.cracking_clicked};
-    int[] images_dry={R.drawable.dry,R.drawable.dry_clicked};
-    int[] images_oozing={R.drawable.oozing,R.drawable.oozing_clicked};
-    int[] images_bleeding={R.drawable.bleeding,R.drawable.bleeding_ticked};
-    int[] images_flaking={R.drawable.flaking,R.drawable.flaking_clicked};
-    int[] images_itchy={R.drawable.itchy,R.drawable.itchy_ticked};
-    int[] images_medicine={R.drawable.medicine,R.drawable.medicine_clicked};
-    int[] images_ointment={R.drawable.ointment,R.drawable.ointment_clicked};
-
+    int[] R_id_array = {R.id.imageView_cracking,R.id.imageView_dry,R.id.imageView_oozing,R.id.imageView_bleeding,R.id.imageView_flaking,R.id.imageView_itchy,R.id.imageView_medicine,R.id.imageView_ointment};
+    int[] drawable = {R.drawable.cracking,R.drawable.dry,R.drawable.oozing,R.drawable.bleeding,R.drawable.flaking,R.drawable.itchy,R.drawable.medicine,R.drawable.ointment};
+    int[] drawable_clicked = {R.drawable.cracking_clicked,R.drawable.dry_clicked,R.drawable.oozing_clicked,R.drawable.bleeding_clicked,R.drawable.flaking_clicked,R.drawable.itchy_clicked,R.drawable.medicine_clicked,R.drawable.ointment_clicked};
+    // Declares camera function parameters
     private static final int CAMERA_REQUEST = 1888;
     private ImageView imageView;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_layout);
 
-        //this.imageView = (ImageView)this.findViewById(R.id.imageView2);
-
+        // Camera OnClickListener
+        this.imageView = (ImageView)this.findViewById(R.id.imageView2);
         Button photoButton = (Button) this.findViewById(R.id.takephoto);
         photoButton.setOnClickListener(new View.OnClickListener()
         {
@@ -108,98 +70,112 @@ public class CalendarActivity extends AppCompatActivity {
             }
         });
 
-        buttonclick();
-        buttonclick_dry();
-        buttonclick_oozing();
-        buttonclick_bleeding();
-        buttonclick_flaking();
-        buttonclick_itchy();
-        buttonclick_medicine();
-        buttonclick_ointment();
-        takephoto = (Button) findViewById(R.id.takephoto);
-
+        // Calendar OnClickListener
         mCalendarView = findViewById(R.id.smth);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        date_chosen = sdf.format(new Date(mCalendarView.getDate()));
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView CalendarView, int year, int month, int dayOfMonth) {
                 month = month +1;
                 String date = year + "/" + month + "/"+ dayOfMonth ;
-                Log.d(TAG, "onSelectedDayChange: yyyy/MM/dd:" + date);
                 date_chosen = date;
-                try {
-                    if (checkDay_on_state_change(date_chosen)) {
-                        String downloaded_ans = MainActivity.D.answers;
-                        char[] ans_char = new char[downloaded_ans.length()];
-                        for (int i = 0; i<downloaded_ans.length(); i++) {
-                            ans_char[i] = downloaded_ans.charAt(i);
-                            if(downloaded_ans.charAt(i) == '1') {
-                                togglers[i] = true;
-                            } else if (downloaded_ans.charAt(i) == '0') {
-                                togglers[i] = false;
-                            }
-                        }
-                    } else {
-                        for (int i = 0; i < togglers.length; i++){
-                            togglers[i] = false;
-                        }
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                imgview = findViewById(R.id.imageView);
-                if (togglers[0] == false) {
-                    imgview.setImageResource(R.drawable.cracking);
-                } else if (togglers[0] == true) {
-                    imgview.setImageResource(R.drawable.cracking_clicked);
-                }
-                dry_click=findViewById(R.id.imageView_dry);
-                if (togglers[1] == false) {
-                    dry_click.setImageResource(R.drawable.dry);
-                } else if (togglers[1] == true) {
-                    dry_click.setImageResource(R.drawable.dry_clicked);
-                }
-                oozing_click=findViewById(R.id.imageView_oozing);
-                if (togglers[2] == false) {
-                    oozing_click.setImageResource(R.drawable.oozing);
-                } else if (togglers[2] == true) {
-                    oozing_click.setImageResource(R.drawable.oozing_clicked);
-                }
-                bleeding_click=findViewById(R.id.imageView_bleeding);
-                if (togglers[3] == false) {
-                    bleeding_click.setImageResource(R.drawable.bleeding);
-                } else if (togglers[3] == true) {
-                    bleeding_click.setImageResource(R.drawable.bleeding_ticked);
-                }
-                flaking_click=findViewById(R.id.imageView_flaking);
-                if (togglers[4] == false) {
-                    flaking_click.setImageResource(R.drawable.flaking);
-                } else if (togglers[4] == true) {
-                    flaking_click.setImageResource(R.drawable.flaking_clicked);
-                }
-                itchy_click=findViewById(R.id.imageView_itchy);
-                if (togglers[5] == false) {
-                    itchy_click.setImageResource(R.drawable.itchy);
-                } else if (togglers[5] == true) {
-                    itchy_click.setImageResource(R.drawable.itchy_ticked);
-                }
-                medicine_click=findViewById(R.id.imageView_medicine);
-                if (togglers[6] == false) {
-                    medicine_click.setImageResource(R.drawable.medicine);
-                } else if (togglers[6] == true) {
-                    medicine_click.setImageResource(R.drawable.medicine_clicked);
-                }
-                ointment_click=findViewById(R.id.imageView_ointment);
-                if (togglers[7] == false) {
-                    ointment_click.setImageResource(R.drawable.ointment);
-                } else if (togglers[7] == true) {
-                    ointment_click.setImageResource(R.drawable.ointment_clicked);
-                }
+
+                display_answers();
+
             }
         });
+
+        // Icons OnClickListener
+        for (int i = 0; i<togglers.length; i++) {
+            final int j = i;
+            ImageView imgview = findViewById(R_id_array[i]);
+            imgview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view){
+                    if (togglers[j] == false) {
+                        togglers[j] = true;
+                    } else if (togglers[j] == true) {
+                        togglers[j] = false;
+                    }
+                    set_icons(j);
+                }
+            });
+        }
+
+        // Initial icon state for current date
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        date_chosen = sdf.format(new Date(mCalendarView.getDate()));
+        display_answers();
+
     }
 
+
+    // Saves answer from database into variable
+    public void display_answers() {
+        try {
+            if (checkDay_on_state_change(date_chosen)) {
+                new_data = false;
+                for (int i = 0; i<MainActivity.D.answers.length(); i++) {
+                    if(MainActivity.D.answers.charAt(i) == '1') {
+                        togglers[i] = true;
+                    } else if (MainActivity.D.answers.charAt(i) == '0') {
+                        togglers[i] = false;
+                    }
+                }
+            } else {
+                new_data = true;
+                for (int i = 0; i < togglers.length; i++){
+                    togglers[i] = false;
+                }
+                Toast.makeText(this, "No data entered for this date", Toast.LENGTH_SHORT).show();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        // Refresh all icons state
+        for (int i = 0; i<togglers.length; i++) {
+            set_icons(i);
+        }
+    }
+
+    // Refresh icon state
+    public void set_icons(int icon_num) {
+        ImageView imgview = findViewById(R_id_array[icon_num]);
+        if (togglers[icon_num] == false) {
+            imgview.setImageResource(drawable[icon_num]);
+        } else if (togglers[icon_num] == true) {
+            imgview.setImageResource(drawable_clicked[icon_num]);
+        }
+    }
+
+
+
+    // Add entry to database depending if selected has existing data
+    public void Save_entry(View view) {
+        Intent intent = new Intent(CalendarActivity.this, MainActivity.class);
+        String score="";
+        for (int i = 0; i < togglers.length; i++){
+            if (togglers[i]==false){score=score+'0';
+            } else{
+                score=score+'1';
+            }
+        }
+        try {
+            if (new_data) {
+                MainActivity.makeDay(score);
+            } else {
+                MainActivity.rewriteDay(score);
+            }
+            Toast.makeText(this, "Data saved", Toast.LENGTH_SHORT).show();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Failed to upload data", Toast.LENGTH_SHORT).show();
+        }
+        startActivity(intent);
+    }
+
+
+
+    // Camera function settings
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
@@ -208,13 +184,13 @@ public class CalendarActivity extends AppCompatActivity {
         {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Camera permission granted", Toast.LENGTH_SHORT).show();
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
             }
             else
             {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -228,6 +204,67 @@ public class CalendarActivity extends AppCompatActivity {
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+    private static ImageView imgview;
+    private static ImageView dry_click;
+    private static ImageView oozing_click;
+    private static ImageView bleeding_click;
+    private static ImageView flaking_click;
+    private static ImageView itchy_click;
+    private static ImageView medicine_click;
+    private static ImageView ointment_click;
+
+    private Button takephoto;
+                takephoto = (Button) findViewById(R.id.takephoto);
+
+
+    private int current_image;
+    private int current_image_dry;
+    private int current_image_oozing;
+    private int current_image_bleeding;
+    private int current_image_flaking;
+    private int current_image_itchy;
+    private int current_image_medicine;
+    private int current_image_ointment;
+
+    private boolean toggle = true;
+    private boolean toggle_dry = false;
+    private boolean toggle_oozing = false;
+    private boolean toggle_bleeding = false;
+    private boolean toggle_flaking = false;
+    private boolean toggle_itchy = false;
+    private boolean toggle_medicine = false;
+    private boolean toggle_ointment = false;
+
+    int[] images={R.drawable.cracking,R.drawable.cracking_clicked};
+    int[] images_dry={R.drawable.dry,R.drawable.dry_clicked};
+    int[] images_oozing={R.drawable.oozing,R.drawable.oozing_clicked};
+    int[] images_bleeding={R.drawable.bleeding,R.drawable.bleeding_clicked};
+    int[] images_flaking={R.drawable.flaking,R.drawable.flaking_clicked};
+    int[] images_itchy={R.drawable.itchy,R.drawable.itchy_clicked};
+    int[] images_medicine={R.drawable.medicine,R.drawable.medicine_clicked};
+    int[] images_ointment={R.drawable.ointment,R.drawable.ointment_clicked};
+
+    String loop_array[] = {"cracking","dry","oozing","bleeding","flaking","itchy","medicine","ointment"};
+
+
+
+
+
+
+
     public void takephoto(View view) {
         Intent intent = new Intent(CalendarActivity.this, MainActivity.class);
 
@@ -235,12 +272,6 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
 
-    public void Go(View view) {//Add entry
-        Intent intent = new Intent(CalendarActivity.this, MainActivity.class);
-        String score = getScore();
-        try {MainActivity.makeDay(score);} catch (SQLException e) {e.printStackTrace();}
-        startActivity(intent);
-    }
 
 
     public void Logo(View view){
@@ -248,8 +279,10 @@ public class CalendarActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+
     public void buttonclick(){
-        imgview = findViewById(R.id.imageView);
+        imgview = findViewById(R.id.imageView_cracking);
         if (togglers[0] == false) {
             imgview.setImageResource(R.drawable.cracking);
         } else if (togglers[0] == true) {
@@ -319,14 +352,14 @@ public class CalendarActivity extends AppCompatActivity {
         if (togglers[3] == false) {
             bleeding_click.setImageResource(R.drawable.bleeding);
         } else if (togglers[3] == true) {
-            bleeding_click.setImageResource(R.drawable.bleeding_ticked);
+            bleeding_click.setImageResource(R.drawable.bleeding_clicked);
         }
         bleeding_click.setOnClickListener(new View.OnClickListener() {
                                               @Override
                                               public void onClick(View view){
                                                   if (togglers[3] == false) {
                                                       togglers[3] = true;
-                                                      bleeding_click.setImageResource(R.drawable.bleeding_ticked);
+                                                      bleeding_click.setImageResource(R.drawable.bleeding_clicked);
                                                   } else if (togglers[3] == true) {
                                                       togglers[3] = false;
                                                       bleeding_click.setImageResource(R.drawable.bleeding);
@@ -363,14 +396,14 @@ public class CalendarActivity extends AppCompatActivity {
         if (togglers[5] == false) {
             itchy_click.setImageResource(R.drawable.itchy);
         } else if (togglers[5] == true) {
-            itchy_click.setImageResource(R.drawable.itchy_ticked);
+            itchy_click.setImageResource(R.drawable.itchy_clicked);
         }
         itchy_click.setOnClickListener(new View.OnClickListener() {
                                            @Override
                                            public void onClick(View view){
                                                if (togglers[5] == false) {
                                                    togglers[5] = true;
-                                                   itchy_click.setImageResource(R.drawable.itchy_ticked);
+                                                   itchy_click.setImageResource(R.drawable.itchy_clicked);
                                                } else if (togglers[5] == true) {
                                                    togglers[5] = false;
                                                    itchy_click.setImageResource(R.drawable.itchy);
@@ -424,18 +457,64 @@ public class CalendarActivity extends AppCompatActivity {
         );
     }
 
-    public String getScore(){
-        String score="";
-        if (togglers[0]==false){score=score+'0';}else{score=score+'1';}
-        if (togglers[1]==false){score=score+'0';}else{score=score+'1';}
-        if (togglers[2]==false){score=score+'0';}else{score=score+'1';}
-        if (togglers[3]==false){score=score+'0';}else{score=score+'1';}
-        if (togglers[4]==false){score=score+'0';}else{score=score+'1';}
-        if (togglers[5]==false){score=score+'0';}else{score=score+'1';}
-        if (togglers[6]==false){score=score+'0';}else{score=score+'1';}
-        if (togglers[7]==false){score=score+'0';}else{score=score+'1';}
 
 
-        return score;
+
+
+
+
+
+
+    imgview = findViewById(R.id.imageView_cracking);
+                if (togglers[0] == false) {
+        imgview.setImageResource(R.drawable.cracking);
+    } else if (togglers[0] == true) {
+        imgview.setImageResource(R.drawable.cracking_clicked);
     }
+    dry_click=findViewById(R.id.imageView_dry);
+                if (togglers[1] == false) {
+        dry_click.setImageResource(R.drawable.dry);
+    } else if (togglers[1] == true) {
+        dry_click.setImageResource(R.drawable.dry_clicked);
+    }
+    oozing_click=findViewById(R.id.imageView_oozing);
+                if (togglers[2] == false) {
+        oozing_click.setImageResource(R.drawable.oozing);
+    } else if (togglers[2] == true) {
+        oozing_click.setImageResource(R.drawable.oozing_clicked);
+    }
+    bleeding_click=findViewById(R.id.imageView_bleeding);
+                if (togglers[3] == false) {
+        bleeding_click.setImageResource(R.drawable.bleeding);
+    } else if (togglers[3] == true) {
+        bleeding_click.setImageResource(R.drawable.bleeding_clicked);
+    }
+    flaking_click=findViewById(R.id.imageView_flaking);
+                if (togglers[4] == false) {
+        flaking_click.setImageResource(R.drawable.flaking);
+    } else if (togglers[4] == true) {
+        flaking_click.setImageResource(R.drawable.flaking_clicked);
+    }
+    itchy_click=findViewById(R.id.imageView_itchy);
+                if (togglers[5] == false) {
+        itchy_click.setImageResource(R.drawable.itchy);
+    } else if (togglers[5] == true) {
+        itchy_click.setImageResource(R.drawable.itchy_clicked);
+    }
+    medicine_click=findViewById(R.id.imageView_medicine);
+                if (togglers[6] == false) {
+        medicine_click.setImageResource(R.drawable.medicine);
+    } else if (togglers[6] == true) {
+        medicine_click.setImageResource(R.drawable.medicine_clicked);
+    }
+    ointment_click=findViewById(R.id.imageView_ointment);
+                if (togglers[7] == false) {
+        ointment_click.setImageResource(R.drawable.ointment);
+    } else if (togglers[7] == true) {
+        ointment_click.setImageResource(R.drawable.ointment_clicked);
+    }
+
+ */
 }
+
+
