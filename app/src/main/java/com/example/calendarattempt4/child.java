@@ -2,6 +2,7 @@ package com.example.calendarattempt4;
 import java.sql.*;
 
 public class child {
+    // Initialises objects
     protected int child_ID;
     protected int parent_ID;
     protected String name;
@@ -10,14 +11,17 @@ public class child {
     protected int weight;
     protected int height;
     protected String dates;
-    String AUTH = null;
-    Statement s;
-
+    // Variable to check if data is returned from database
+    protected String AUTH = null;
+    // Statement to connect to Postgresql
+    protected Statement s;
     public child(){
     }
 
+    // Retrieves child data with pre-selected CID and saves into variables
     public void connect(Statement s, int parent_ID, int child_num) throws SQLException {
         this.s = s;
+        // Gets CID from slected child from specific parent
         String sqlStr = "SELECT Child_ID_"+child_num+" FROM parents WHERE PID =\'"+parent_ID+"\';";
         ResultSet rset=s.executeQuery(sqlStr);
         while(rset.next()) {
@@ -37,7 +41,7 @@ public class child {
     }
 
 
-
+    // Checks if Child name already exists and creates new child if not
     public boolean create(String new_name, int parent_ID) throws SQLException {
         String sqlStr = "SELECT CID FROM children WHERE child_name =\'"+new_name+"\' and PID = \'"+parent_ID+"\';";
         ResultSet rset=s.executeQuery(sqlStr);
@@ -46,11 +50,13 @@ public class child {
             AUTH = rset.getString("CID");
         }
         if (AUTH != null){
+            // Returns status to main class to show user message
             return false;
         }else{
             sqlStr = "insert into children (child_name,PID) values(\'"+new_name+"\',\'"+parent_ID+"\');";
-            // adds child info
+            // Creates child info
             s.execute (sqlStr);
+            // Returns status to main class to show user message
             return true;
         }
     }

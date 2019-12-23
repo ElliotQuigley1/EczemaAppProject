@@ -114,6 +114,7 @@ public class CalendarActivity extends AppCompatActivity {
         try {
             if (checkDay_on_state_change(date_chosen)) {
                 new_data = false;
+                // Converts 1 and 0 into boolean variable array
                 for (int i = 0; i<MainActivity.D.answers.length(); i++) {
                     if(MainActivity.D.answers.charAt(i) == '1') {
                         togglers[i] = true;
@@ -150,6 +151,7 @@ public class CalendarActivity extends AppCompatActivity {
 
 
     // Add entry to database depending if selected has existing data
+    // Shows user message for success / failure
     public void Save_entry(View view) {
         Intent intent = new Intent(CalendarActivity.this, MainActivity.class);
         String score="";
@@ -165,11 +167,14 @@ public class CalendarActivity extends AppCompatActivity {
             } else {
                 MainActivity.rewriteDay(score);
             }
+            // Shows user message for success / failure
             Toast.makeText(this, "Data saved", Toast.LENGTH_SHORT).show();
         } catch (SQLException e) {
             e.printStackTrace();
+            // Shows user message for success / failure
             Toast.makeText(this, "Failed to upload data", Toast.LENGTH_SHORT).show();
         }
+        // Returns to main page
         startActivity(intent);
     }
 
