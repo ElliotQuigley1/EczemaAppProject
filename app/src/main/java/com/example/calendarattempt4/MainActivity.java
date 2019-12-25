@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView score;
     private Button btngocalendar;
     // Initialises objects
+    int child_selected = 1;
     public Database db = new Database();
     static Statement s = null;
     static parent P = new parent(); // THIS LINE CREATES PARENT OBJECT BASED ON HARDCODED USERNAME PASSWORD AND ID
@@ -87,6 +88,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        // NOTE TO SELF: Verify if user has been logged in, prompts log in activity if not
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+
         // Connects Database and displays current date data
         if (db.connect()) {
             s = db.getConnection();
@@ -94,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             P.connect(s);
             try {
                 // Passes on Statement s to child and selects CID depending on selected child
-                selectChild_button(1);
+                selectChild_button(child_selected);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
                 String date_chosen = sdf.format(nowday);
                 checkDay_on_state_change(date_chosen); // can remove????????
@@ -152,9 +158,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_gallery:
                 Toast.makeText(this, "gallery", Toast.LENGTH_SHORT).show();
+                child_selected = 1;
                 break;
             case R.id.nav_slideshow:
                 Toast.makeText(this, "slideshow", Toast.LENGTH_SHORT).show();
+                child_selected = 2;
                 break;
             case R.id.nav_tools:
                 Toast.makeText(this, "tools", Toast.LENGTH_SHORT).show();
@@ -167,14 +175,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
-        // Runs
-        // selectChild_button(child_num_from_app);
+
+        try {
+            selectChild_button(child_selected);
+            Toast.makeText(this, "Child updated", Toast.LENGTH_SHORT).show();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
     // Runs with child_num_from_app from onNavigationItemSelected() to connect DB with corresponding child_num
     public static void selectChild_button(int child_num_from_app) throws SQLException {
-        child_num_from_app = 1;
         C.connect(s, P.parent_ID, child_num_from_app);
     }
 
