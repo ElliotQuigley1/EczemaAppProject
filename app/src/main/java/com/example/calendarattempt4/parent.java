@@ -4,14 +4,14 @@ import java.sql.*;
 
 public class parent {
     // Initialises objects
-    protected int parent_ID;
-    protected String username;
-    protected String password;
-    protected String email;
-    protected int Child_num;
-    protected int CID_1;
-    protected int CID_2;
-    protected int CID_3;
+    protected int parent_ID;        //Stores PARENT's ID, unique, used for database searching
+    protected String username;      //Stores PARENT's username, unique, used for login
+    protected String password;      //Stores PARENT's password, used for login
+    protected String email;         //Stores PARENT's email, unique, used for login and account retrieval
+    protected int Child_num;        //Stores ID of CHILD currently being viewed or logged
+    protected int CID_1;            //Stores ID of 1st CHILD, The ID of each CHILD belonging to current PARENT is stored
+    protected int CID_2;            //Stores ID of 2nd CHILD
+    protected int CID_3;            //Stores ID of 3rd CHILD
     // Variable to check if data is returned from database
     protected String AUTH = null;
     // Statement to connect to Postgresql
