@@ -15,10 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Add_child"
+            android:label="@string/title_activity_add_child"></activity>
+        <activity
             android:name=".ui.ui.login.LoginActivity"
-            android:label="@string/title_activity_login">
-
-        </activity>
+            android:label="@string/title_activity_login"></activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"

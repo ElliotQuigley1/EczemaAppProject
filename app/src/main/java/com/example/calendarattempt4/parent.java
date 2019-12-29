@@ -22,7 +22,7 @@ public class parent {
     // USED FOR DEVELOPMENT
     // REAL DATA WILL BE OBTAINED WITH PARENT LOG IN
     // WILL BE DELETED BEFORE SUBMITTING
-    public parent(){
+    public parent() {
         this.parent_ID = 1;
         this.username = "D_username";
         this.password = "D_password";
@@ -34,17 +34,18 @@ public class parent {
     }
 
     // Passes on Statement s to parent
-    public void connect(Statement s){
+    public void connect(Statement s) {
         this.s = s;
     }
 
     // Retrieves info associated with parent login credentials and return state to main class
     public boolean login(String username, String password) throws SQLException {
-        String sqlStr = "SELECT PID, email, Child_num, Child_ID_1, Child_ID_2, Child_ID_3  FROM parents WHERE username =\'"+username+"\' and password = \'"+password+"\';";
-        ResultSet rset=s.executeQuery(sqlStr);
+        String sqlStr = "SELECT PID, email, Child_num, Child_ID_1, Child_ID_2, Child_ID_3  FROM parents WHERE username =\'" + username + "\' and password = \'" + password + "\';";
+        ResultSet rset = s.executeQuery(sqlStr);
         AUTH = null;
-        while(rset.next()) {
-            this.parent_ID = rset.getInt("PID");;
+        while (rset.next()) {
+            this.parent_ID = rset.getInt("PID");
+            ;
             this.email = rset.getString("email");
             AUTH = rset.getString("PID");
             this.Child_num = rset.getInt("Child_num");
@@ -53,10 +54,10 @@ public class parent {
             this.CID_3 = rset.getInt("Child_ID_3");
         }
 
-        if (AUTH == null){
+        if (AUTH == null) {
             // Returns status to main class to show user message
             return false;
-        }else{
+        } else {
             // Returns status to main class to show user message
             return true;
         }
@@ -64,20 +65,24 @@ public class parent {
 
     // Checks if account already exists and creates new account if not
     public boolean signup(String username, String password, String email) throws SQLException {
-        String sqlStr = "SELECT PID FROM parents WHERE username =\'"+username+"\' or email = \'"+email+"\';";
-        ResultSet rset=s.executeQuery(sqlStr);
-        while(rset.next()) {
+        String sqlStr = "SELECT PID FROM parents WHERE username =\'" + username + "\' or email = \'" + email + "\';";
+        ResultSet rset = s.executeQuery(sqlStr);
+        while (rset.next()) {
             AUTH = rset.getString("PID");
         }
-        if (AUTH != null){
+        if (AUTH != null) {
             // Returns status to main class to show user message
             return false;
-        }else{
-            sqlStr = "insert into parents (username,password,email) values(\'"+username+"\',\'"+password+"\',\'"+email+"\');";
-            s.execute (sqlStr);
+        } else {
+            sqlStr = "insert into parents (username,password,email) values(\'" + username + "\',\'" + password + "\',\'" + email + "\');";
+            s.execute(sqlStr);
             // Returns status to main class to show user message
             return true;
         }
     }
+////////////////////////////////////////////////////////////////////////////////////////////////
+    public void create_child(String username, String password, String email) throws SQLException {
 
+
+    }
 }

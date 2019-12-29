@@ -25,9 +25,6 @@ import androidx.annotation.NonNull;
 
 import static com.example.calendarattempt4.MainActivity.checkDay_on_state_change;
 
-/**
- * Created by ganesh on 6/10/2017.
- */
 
 public class CalendarActivity extends AppCompatActivity {
     // Declares view objects
@@ -80,7 +77,6 @@ public class CalendarActivity extends AppCompatActivity {
                 date_chosen = date;
 
                 display_answers();
-
             }
         });
 
