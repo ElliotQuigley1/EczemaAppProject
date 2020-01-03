@@ -1,6 +1,7 @@
 package com.example.calendarattempt4;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
@@ -72,7 +73,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     static child C = new child();
     static day D = new day();
     // Gets current date when user opens app
-    static Date nowday = Calendar.getInstance().getTime();
+    //static Date nowday = Calendar.getInstance().getTime();
+    static Date nowday = new Date();
     static String date = nowday.toString();
     // Prepares values for graph plotting
     private static final Random RANDOM = new Random();
@@ -95,9 +97,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             try {
                 // Passes on Statement s to child and selects CID depending on selected child
                 selectChild_button(1);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+                SimpleDateFormat sdf = new SimpleDateFormat("E HH:mm");
                 String date_chosen = sdf.format(nowday);
-                checkDay_on_state_change(date_chosen); // can remove????????
+                checkDay_on_state_change(date_chosen); // can remove???????? A[I think this can be removed]
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -220,14 +222,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         score = (TextView) findViewById(R.id.score_display);
-        score.setText("text you want to display");
+        score.setText("Previous POEM Scores");
+        score.setTextColor(Color.BLACK);
 
         thedate = (TextView) findViewById(R.id.date);
         Intent incoming = getIntent();
         if (incoming.getStringExtra("date") != null){
             date = incoming.getStringExtra("date");
         }
-        thedate.setText(date);
+        //thedate.setText(date);
+        SimpleDateFormat sdf = new SimpleDateFormat(" E HH:mm \ndd/MM/yyyy");
+        String date_chosen = sdf.format(nowday);
+        thedate.setText(date_chosen);
+        thedate.setTextColor(Color.BLACK);
 
         // we're going to simulate real time with thread that append data to the graph
         new Thread(new Runnable() {
