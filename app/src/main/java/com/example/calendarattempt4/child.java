@@ -1,7 +1,7 @@
 package com.example.calendarattempt4;
 import java.sql.*;
 
-public class child {
+public class child{
     // Initialises objects
     protected int child_ID;         //Stores CHILD's ID, unique, used for database search
     protected int parent_ID;        //Stores PARENT's ID which CHILD belongs to

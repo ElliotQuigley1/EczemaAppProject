@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final Random RANDOM = new Random();
     protected LineGraphSeries<DataPoint> series;
     private int lastX = 0;
+    protected DataPoint E[];
     private double[]  x_array = new double[300];
     private double[]  y_array = new double[300];
 
@@ -129,7 +130,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Initialises graph view
         GraphView graph = (GraphView) findViewById(R.id.graph);
-        series = new LineGraphSeries<DataPoint>();
+
+        series = new LineGraphSeries<>();
         graph.addSeries(series);
         // Customize graph viewport
         Viewport viewport = graph.getViewport();
@@ -140,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewport.setMaxX(50);
         viewport.setScrollable(true);
         viewport.setScalable(true);
-        graph.getGridLabelRenderer().setHorizontalAxisTitle("Weeks");
+        graph.getGridLabelRenderer().setHorizontalAxisTitle("Weeks ago");
         graph.getGridLabelRenderer().setVerticalAxisTitle("Severity of Eczema (POEM)");
     }
 
@@ -230,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (incoming.getStringExtra("date") != null){
             date = incoming.getStringExtra("date");
         }
-        //thedate.setText(date);
+        thedate.setText(date);
         SimpleDateFormat sdf = new SimpleDateFormat(" E HH:mm \ndd/MM/yyyy");
         String date_chosen = sdf.format(nowday);
         thedate.setText(date_chosen);

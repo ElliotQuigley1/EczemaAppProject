@@ -248,8 +248,8 @@
             android:id="@+id/takephoto"
             android:layout_width="104dp"
             android:layout_height="51dp"
-            android:layout_marginTop="164dp"
-            android:layout_marginEnd="280dp"
+            android:layout_marginTop="56dp"
+            android:layout_marginEnd="152dp"
             android:background="@color/colorAccent"
             android:text="TAKE PHOTO"
             app:layout_constraintEnd_toEndOf="parent"
@@ -263,10 +263,10 @@
             android:layout_marginBottom="40dp"
             app:layout_constraintBottom_toTopOf="@+id/button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.541"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/textView11"
             app:layout_constraintTop_toTopOf="@+id/textView8"
-            app:layout_constraintVertical_bias="0.48"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/ic_menu_camera" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
