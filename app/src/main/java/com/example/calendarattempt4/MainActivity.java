@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView score;
     private Button btngocalendar;
     // Initialises objects
+    int child_selected = 1;
     public Database db = new Database();
     static Statement s = null;
     static parent P = new parent(); // THIS LINE CREATES PARENT OBJECT BASED ON HARDCODED USERNAME PASSWORD AND ID
@@ -83,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected DataPoint E[];
     private double[]  x_array = new double[300];
     private double[]  y_array = new double[300];
+    // Log-in state
+    static boolean logged_in = true;
 
 
 
@@ -90,6 +93,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        // NOTE TO SELF: Verify if user has been logged in, prompts log in activity if not
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+
         // Connects Database and displays current date data
         if (db.connect()) {
             s = db.getConnection();
@@ -97,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             P.connect(s);
             try {
                 // Passes on Statement s to child and selects CID depending on selected child
-                selectChild_button(1);
+                selectChild_button(child_selected);
                 SimpleDateFormat sdf = new SimpleDateFormat("E HH:mm");
                 String date_chosen = sdf.format(nowday);
                 checkDay_on_state_change(date_chosen); // can remove???????? A[I think this can be removed]
@@ -119,14 +127,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send)
+                R.id.nav_home, R.id.nav_C1, R.id.nav_C2, R.id.nav_C3,
+                R.id.nav_c_add, R.id.nav_share, R.id.nav_send)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         navigationView.setNavigationItemSelectedListener(this);
+
+
 
         // Initialises graph view
         GraphView graph = (GraphView) findViewById(R.id.graph);
@@ -144,24 +154,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewport.setScalable(true);
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Weeks ago");
         graph.getGridLabelRenderer().setVerticalAxisTitle("Severity of Eczema (POEM)");
+
+        // Set navigation drawer menu based on number of children of user
+        Menu menu = navigationView.getMenu();
+        if (logged_in) {
+            switch (P.Child_num) {
+                case 2:
+                    menu.findItem(R.id.nav_C3).setVisible(false);
+                case 1:
+                    menu.findItem(R.id.nav_C2).setVisible(false);
+                case 0:
+                    menu.findItem(R.id.nav_C1).setVisible(false);
+                    break;
+                case 3:
+                    //menu.findItem(R.id.nav_c_add).setVisible(false);
+            }
+        }
+
     }
 
+
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    // NOTE TO SELF: Code here to pass on selected child_num / login from navigation drawer to selectChild_button()
+    // NOTE TO SELF: Code here to pass on add child / log-out from navigation drawer
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_home:
                 Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.nav_gallery:
-                Toast.makeText(this, "gallery", Toast.LENGTH_SHORT).show();
+            case R.id.nav_C1:
+                Toast.makeText(this, "Child 1", Toast.LENGTH_SHORT).show();
+                child_selected = 1;
                 break;
-            case R.id.nav_slideshow:
-                Toast.makeText(this, "slideshow", Toast.LENGTH_SHORT).show();
+            case R.id.nav_C2:
+                Toast.makeText(this, "Child 2", Toast.LENGTH_SHORT).show();
+                child_selected = 2;
                 break;
-            case R.id.nav_tools:
-                Toast.makeText(this, "tools", Toast.LENGTH_SHORT).show();
+            case R.id.nav_C3:
+                Toast.makeText(this, "Child 3", Toast.LENGTH_SHORT).show();
+                child_selected = 3;
+                break;
+            case R.id.nav_c_add:
+                Toast.makeText(this, "Add child", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, Add_child.class);
+                startActivity(intent);
                 break;
             case R.id.nav_share:
                 Toast.makeText(this, "share", Toast.LENGTH_SHORT).show();
@@ -171,14 +208,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
-        // Runs
-        // selectChild_button(child_num_from_app);
+
+        try {
+            selectChild_button(child_selected);
+            Toast.makeText(this, "Child updated", Toast.LENGTH_SHORT).show();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
     // Runs with child_num_from_app from onNavigationItemSelected() to connect DB with corresponding child_num
     public static void selectChild_button(int child_num_from_app) throws SQLException {
-        child_num_from_app = 1;
         C.connect(s, P.parent_ID, child_num_from_app);
     }
 
@@ -299,6 +340,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main2, menu);
+
+
         return true;
     }
 

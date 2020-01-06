@@ -24,7 +24,9 @@ public class child{
         // Gets CHILD ID using selected CHILD from specific PARENT
         String sqlStr = "SELECT Child_ID_"+child_num+" FROM parents WHERE PID =\'"+parent_ID+"\';";
         ResultSet rset=s.executeQuery(sqlStr);
-        while(rset.next()) {this.child_ID = rset.getInt("Child_ID_1"); }
+        while(rset.next()) {
+            this.child_ID = rset.getInt("Child_ID_"+child_num);
+        }
         // Gets CHILD's data using CHILD ID
         sqlStr = "SELECT Child_name, animal, age, weight, height, dates_filled  FROM children WHERE CID ="+child_ID+";";
         rset=s.executeQuery(sqlStr);

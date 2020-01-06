@@ -9,20 +9,24 @@
             android:icon="@drawable/home"
             android:title="HOME" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_C1"
             android:icon="@drawable/child"
             android:title="CHILD 1" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_C2"
             android:icon="@drawable/child"
             android:title="CHILD 2" />
         <item
-            android:id="@+id/nav_tools"
+            android:id="@+id/nav_C3"
+            android:icon="@drawable/child"
+            android:title="CHILD 3" />
+        <item
+            android:id="@+id/nav_c_add"
             android:icon="@drawable/addchild"
             android:title="ADD CHILD" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Accounts">
         <menu>
             <item
                 android:id="@+id/nav_share"
