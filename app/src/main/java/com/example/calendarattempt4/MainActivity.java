@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Value.setText("Child name:\t\t\t" + "\nAge:\t\t\t" + "\nHeight:\t\t\t" + "\nWeight:\t\t\t");
         Value.setTextColor(Color.BLACK);
         Data = (TextView) findViewById(R.id.Data);
-        Data.setText(C.name + "\n" + C.age + "\n" + C.height + "\n" + C.weight);
+        Data.setText(C.getName() + "\n" + C.getAge() + "\n" + C.getHeight() + "\n" + C.getWeight());
         Data.setTextColor(Color.BLACK);
 
         // we're going to simulate real time with thread that append data to the graph
@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // Passes on Statement s to day and retrieve data for selected day
     public static boolean checkDay_on_state_change(String date) throws SQLException {
-        if (D.check(C.child_ID, P.getParent_ID(), date, s)){
+        if (D.check(C.getChild_ID(), P.getParent_ID(), date, s)){
             System.out.println("Answers for selected date:\t" + D.answers);
             // displays at editText on Android Studio
             return true;
