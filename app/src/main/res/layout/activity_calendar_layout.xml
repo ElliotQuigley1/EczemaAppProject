@@ -18,9 +18,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/entry_button"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:background="#00FFFFFF"
             android:onClick="Save_entry"
             android:text="ADD ENTRY"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -261,7 +262,7 @@
             android:layout_height="126dp"
             android:layout_marginTop="42dp"
             android:layout_marginBottom="40dp"
-            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintBottom_toTopOf="@+id/entry_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/textView11"

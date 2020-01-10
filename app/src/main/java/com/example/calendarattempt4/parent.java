@@ -4,18 +4,18 @@ import java.sql.*;
 
 public class parent {
     // Initialises objects
-    protected int parent_ID;        //Stores PARENT's ID, unique, used for database searching
-    protected String username;      //Stores PARENT's username, unique, used for login
-    protected String password;      //Stores PARENT's password, used for login
-    protected String email;         //Stores PARENT's email, unique, used for login and account retrieval
-    protected int Child_num;        //Stores ID of CHILD currently being viewed or logged
-    protected int CID_1;            //Stores ID of 1st CHILD, The ID of each CHILD belonging to current PARENT is stored
-    protected int CID_2;            //Stores ID of 2nd CHILD
-    protected int CID_3;            //Stores ID of 3rd CHILD
+    private int parent_ID;        //Stores PARENT's ID, unique, used for database searching
+    private String username;      //Stores PARENT's username, unique, used for login
+    private String password;      //Stores PARENT's password, used for login
+    private String email;         //Stores PARENT's email, unique, used for login and account retrieval
+    private int Child_num;        //Stores ID of CHILD currently being viewed or logged
+    private int CID_1;            //Stores ID of 1st CHILD, The ID of each CHILD belonging to current PARENT is stored
+    private int CID_2;            //Stores ID of 2nd CHILD
+    private int CID_3;            //Stores ID of 3rd CHILD
     // Variable to check if data is returned from database
-    protected String AUTH = null;
+    private String AUTH = null;
     // Statement to connect to Postgresql
-    protected Statement s;
+    private Statement s;
 
 
     // HARD CODED DATA
@@ -24,9 +24,9 @@ public class parent {
     // WILL BE DELETED BEFORE SUBMITTING
     public parent() {
         this.parent_ID = 1;
-        this.username = "D_username";
-        this.password = "D_password";
-        this.email = "D_email";
+        this.username = "example_username";
+        this.password = "example_password";
+        this.email = "example_gmail.com";
         this.Child_num = 3;
         this.CID_1 = 1;
         this.CID_2 = 2;
@@ -80,9 +80,44 @@ public class parent {
             return true;
         }
     }
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
     public void create_child(String username, String password, String email) throws SQLException {
 
 
     }
+
+
+    public int getParent_ID() {
+        return parent_ID;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+
+    public String getEmail() {
+        return email;
+    }
+
+    public int getChild_num() {
+        return Child_num;
+    }
+
+    public int getCID_1() {
+        return CID_1;
+    }
+
+    public int getCID_2() {
+        return CID_2;
+    }
+
+    public int getCID_3() {
+        return CID_3;
+    }
+
+
 }

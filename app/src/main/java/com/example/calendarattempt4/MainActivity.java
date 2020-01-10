@@ -2,30 +2,18 @@ package com.example.calendarattempt4;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.icu.util.Calendar;
-import android.os.Build;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
+
 import android.view.MenuItem;
-import android.widget.CalendarView;
 import android.widget.TextView;
 
 import java.util.Random;
@@ -33,7 +21,6 @@ import java.util.Random;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -49,7 +36,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.SQLException;
@@ -62,7 +48,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawer;
     // Declares view objects
-    private TextView thedate;
+    private TextView Value;
+    private TextView Data;
     private TextView score;
     private Button btngocalendar;
     // Initialises objects
@@ -94,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         ///////////////////////////////////////////////////////////////////////////////////////////////
         // NOTE TO SELF: Verify if user has been logged in, prompts log in activity if not
         ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             try {
                 // Passes on Statement s to child and selects CID depending on selected child
                 selectChild_button(child_selected);
-                SimpleDateFormat sdf = new SimpleDateFormat("E HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
                 String date_chosen = sdf.format(nowday);
                 checkDay_on_state_change(date_chosen); // can remove???????? A[I think this can be removed]
             } catch (SQLException e) {
@@ -135,14 +123,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         navigationView.setNavigationItemSelectedListener(this);
-
-
+        View header = navigationView.getHeaderView(0);
+        TextView username_display = header.findViewById(R.id.username_display);
+        username_display.setText(P.getUsername() + " - Logged in");
+        TextView email_display = header.findViewById(R.id.email_display);
+        email_display.setText(P.getEmail());
 
         // Initialises graph view
         GraphView graph = (GraphView) findViewById(R.id.graph);
-
         series = new LineGraphSeries<>();
         graph.addSeries(series);
+
         // Customize graph viewport
         Viewport viewport = graph.getViewport();
         viewport.setYAxisBoundsManual(true);
@@ -158,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Set navigation drawer menu based on number of children of user
         Menu menu = navigationView.getMenu();
         if (logged_in) {
-            switch (P.Child_num) {
+            switch (P.getChild_num()) {
                 case 2:
                     menu.findItem(R.id.nav_C3).setVisible(false);
                 case 1:
@@ -220,13 +211,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // Runs with child_num_from_app from onNavigationItemSelected() to connect DB with corresponding child_num
     public static void selectChild_button(int child_num_from_app) throws SQLException {
-        C.connect(s, P.parent_ID, child_num_from_app);
+        C.connect(s, P.getParent_ID(), child_num_from_app);
     }
 
     // NOTE TO SELF: Create signup activity
     private void signup_button(String userName_from_app, String password_from_app, String email_from_app) throws SQLException {
         if (P.signup(userName_from_app, password_from_app, email_from_app) == false){
-            Toast.makeText(this, "User already exists" + P.email + ", " + P.username, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "User already exists" + P.getEmail() + ", " + P.getUsername(), Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Account created", Toast.LENGTH_SHORT).show();
             /*
@@ -239,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // NOTE TO SELF: Create login activity
     private void LogIn_button(String userName_from_app, String password_from_app) throws SQLException {
         if (P.login(userName_from_app, password_from_app) == true){
-            Toast.makeText(this, "LOGGED IN\nUser email:\t" + P.username, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "LOGGED IN\nUser email:\t" + P.getUsername(), Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this,"WRONG LOG IN" , Toast.LENGTH_SHORT).show();
         }
@@ -248,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // NOTE TO SELF: have to create cross checking between DB and navcontroller to display the right amount of children
     // NOTE TO SELF: Create make_child activity
     public void makeChild_button(String name_from_app) throws SQLException {
-        if (C.create(name_from_app, P.parent_ID) == false){
+        if (C.create(name_from_app, P.getParent_ID()) == false){
             Toast.makeText(this, "Child already exists:" + name_from_app, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Child created", Toast.LENGTH_SHORT).show();
@@ -267,17 +258,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         score = (TextView) findViewById(R.id.score_display);
         score.setText("Previous POEM Scores");
         score.setTextColor(Color.BLACK);
-
-        thedate = (TextView) findViewById(R.id.date);
-        Intent incoming = getIntent();
-        if (incoming.getStringExtra("date") != null){
-            date = incoming.getStringExtra("date");
-        }
-        thedate.setText(date);
-        SimpleDateFormat sdf = new SimpleDateFormat(" E HH:mm \ndd/MM/yyyy");
-        String date_chosen = sdf.format(nowday);
-        thedate.setText(date_chosen);
-        thedate.setTextColor(Color.BLACK);
+        Value = (TextView) findViewById(R.id.Value);
+        Value.setText("Child name:\t\t\t" + "\nAge:\t\t\t" + "\nHeight:\t\t\t" + "\nWeight:\t\t\t");
+        Value.setTextColor(Color.BLACK);
+        Data = (TextView) findViewById(R.id.Data);
+        Data.setText(C.name + "\n" + C.age + "\n" + C.height + "\n" + C.weight);
+        Data.setTextColor(Color.BLACK);
 
         // we're going to simulate real time with thread that append data to the graph
         new Thread(new Runnable() {
@@ -295,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }).start();
+
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -305,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // Passes on Statement s to day and retrieve data for selected day
     public static boolean checkDay_on_state_change(String date) throws SQLException {
-        if (D.check(C.child_ID, P.parent_ID, date, s)){
+        if (D.check(C.child_ID, P.getParent_ID(), date, s)){
             System.out.println("Answers for selected date:\t" + D.answers);
             // displays at editText on Android Studio
             return true;
