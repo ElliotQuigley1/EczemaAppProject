@@ -6,9 +6,9 @@ import java.time.LocalDate;
 public class day {
     // Initialises objects
     private int Day_ID;               //Stores DAY ID, unique, used for database search
-    protected int parent_ID;            //Stores PARENT ID for each CHILD's entry
-    protected int child_ID;             //Stores CHILD ID for each entry
-    protected String date;              //Stores actual date as a string
+    private int Parent_ID;            //Stores PARENT ID for each CHILD's entry
+    private int Child_ID;             //Stores CHILD ID for each entry
+    private String date;              //Stores actual date as a string
     protected String answers;           //Stores answers to eczema questions as a string
     // Variable to check if data is returned from database
     protected String AUTH = null;
@@ -19,23 +19,23 @@ public class day {
 
     public day(){}
 
-    public void setDay_ID(int did) {
-        this.Day_ID = did;
-    }
-
-
-    public int getDay_ID() {
-        return Day_ID;
-    }
+    public void setChild_ID(int cid){ this.Child_ID = cid ;}
+    public void setDate(String dat) {this.date = dat ;}
+    public void setDay_ID(int did) { this.Day_ID = did; }
+    public void setParent_ID(int pid){ this.Parent_ID = pid; }
+    public String getDate() { return date; }
+    public int getChild_ID() { return Child_ID;}
+    public int getDay_ID() { return Day_ID; }
+    public int getParent_ID() { return Parent_ID ; }
 
     //Checking if date entry already exists
     // Passes on Statement s to day and retrieve data for selected day
     public boolean check(int CID, int PID, String date, Statement s) throws SQLException {
         AUTH = null;
         this.s = s;
-        this.parent_ID = PID;
-        this.child_ID = CID;
-        this.date = date;
+        setParent_ID(PID);
+        setChild_ID(CID);
+        setDate(date);
         // Retrieves answers using CHILD ID and date, Then resets answers to 0 if NULL
         String sqlStr = "SELECT * FROM dates WHERE CID =\'"+CID+"\' and date =\'"+date+"\';";
         ResultSet rset=s.executeQuery(sqlStr);
@@ -62,7 +62,7 @@ public class day {
 
     // Create answers for new date
     public void create(String answers) throws SQLException {
-        String sqlStr = "INSERT INTO public.dates(cid, pid, date, record) VALUES (\'"+ this.child_ID +"\',\'"+ this.parent_ID +"\',\'"+ this.date +"\',\'"+ answers +"\');";
+        String sqlStr = "INSERT INTO public.dates(cid, pid, date, record) VALUES (\'"+ this.Child_ID +"\',\'"+ this.Parent_ID +"\',\'"+ this.date +"\',\'"+ answers +"\');";
         s.execute (sqlStr);
     }
 }

@@ -2,15 +2,16 @@ package com.example.calendarattempt4;
 import java.sql.*;
 
 public class child extends MainActivity{
+
     // Initialises objects
-    protected int child_ID;         //Stores CHILD's ID, unique, used for database search
-    protected int parent_ID;        //Stores PARENT's ID which CHILD belongs to
-    protected String name;          //Stores CHILD's real name, used for displaying in app
-    protected String animal;        //Stores CHILD's favourite animal, used for displaying the CHILD's avatar
-    protected int age;              //Stores data for database
-    protected int weight;           //Stores data for database
-    protected int height;           //Stores data for database
-    protected String dates;         //Stores previous dates that have been filled out
+    private int child_ID;         //Stores CHILD's ID, unique, used for database search
+    private int parent_ID;        //Stores PARENT's ID which CHILD belongs to
+    private String name;          //Stores CHILD's real name, used for displaying in app
+    private String animal;        //Stores CHILD's favourite animal, used for displaying the CHILD's avatar
+    private int age;              //Stores data for database
+    private int weight;           //Stores data for database
+    private int height;           //Stores data for database
+    private String dates;         //Stores previous dates that have been filled out
     // Variable to check if data is returned from database
     protected String AUTH = null;
     // Statement to connect to Postgresql
@@ -39,19 +40,17 @@ public class child extends MainActivity{
                 break;
         }
 
-
-
         // Gets CHILD's data using CHILD ID
         sqlStr = "SELECT Child_name, animal, age, weight, height, dates_filled  FROM children WHERE CID ="+child_ID+";";
         rset=s.executeQuery(sqlStr);
         // Stores CHILD's data in variables
         while(rset.next()) {
-            this.name = rset.getString("Child_name");
-            this.animal = rset.getString("animal");
-            this.age = rset.getInt("age");
-            this.weight = rset.getInt("weight");
-            this.height = rset.getInt("height");
-            this.dates = rset.getString("dates_filled");
+            setName(rset.getString("Child_name"));
+            setAnimal(rset.getString("animal"));
+            setAge(rset.getInt("age"));
+            setWeight(rset.getInt("weight"));
+            setHeight(rset.getInt("height"));
+            setDates(rset.getString("dates_filled"));
         }
         this.parent_ID = parent_ID;
     }
@@ -78,4 +77,21 @@ public class child extends MainActivity{
             return true;
         }
     }
+    public void setChild_ID(int child_ID) { this.child_ID = child_ID; }
+    public void setParent_ID(int parent_ID) { this.parent_ID = parent_ID; }
+    public void setName(String name) { this.name = name; }
+    public void setAnimal(String animal) { this.animal = animal; }
+    public void setAge(int age) { this.age = age; }
+    public void setWeight(int weight) { this.weight = weight; }
+    public void setHeight(int height) { this.height = height; }
+    public void setDates(String dates) { this.dates = dates; }
+    public int getChild_ID() { return child_ID; }
+    public int getParent_ID() { return parent_ID; }
+    public String getName() { return name; }
+    public String getAnimal() { return animal; }
+    public int getAge() { return age; }
+    public int getWeight() { return weight; }
+    public int getHeight() { return height; }
+    public String getDates() { return dates; }
+
 }
