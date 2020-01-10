@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewport.setMinY(0);
         viewport.setMaxY(12);
         viewport.setMinX(00);
-        viewport.setMaxX(50);
+        viewport.setMaxX(40);
         viewport.setScrollable(true);
         viewport.setScalable(true);
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Weeks ago");
