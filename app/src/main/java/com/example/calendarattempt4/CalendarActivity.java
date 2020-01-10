@@ -30,6 +30,7 @@ public class CalendarActivity extends AppCompatActivity {
     // Declares view objects
     private CalendarView mCalendarView;
     private String date_chosen;
+    private Button entry_button;
     // Declares array for icons state
     private boolean new_data = true;
     private boolean togglers[] = {false,false,false,false,false,false,false,false};
@@ -73,7 +74,9 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(CalendarView CalendarView, int year, int month, int dayOfMonth) {
                 month = month +1;
-                String date = year + "/" + month + "/"+ dayOfMonth ;
+                String month_formatted = String.format("%02d", month);
+                String date_formatted = String.format("%02d", dayOfMonth);
+                String date = year + "/" + month_formatted + "/"+ date_formatted ;
                 date_chosen = date;
 
                 display_answers();
@@ -108,6 +111,7 @@ public class CalendarActivity extends AppCompatActivity {
     // Saves answer from database into variable
     public void display_answers() {
         try {
+            entry_button = findViewById(R.id.entry_button);
             if (checkDay_on_state_change(date_chosen)) {
                 new_data = false;
                 // Converts 1 and 0 into boolean variable array
@@ -118,12 +122,16 @@ public class CalendarActivity extends AppCompatActivity {
                         togglers[i] = false;
                     }
                 }
+                entry_button.setBackgroundColor(0xFF8D8D8D);
+                entry_button.setText("UPDATE ENTRY");
             } else {
                 new_data = true;
                 for (int i = 0; i < togglers.length; i++){
                     togglers[i] = false;
                 }
                 Toast.makeText(this, "No data entered for this date", Toast.LENGTH_SHORT).show();
+                entry_button.setBackgroundColor(0xFF119587);
+                entry_button.setText("ADD ENTRY");
             }
         } catch (SQLException e) {
             e.printStackTrace();

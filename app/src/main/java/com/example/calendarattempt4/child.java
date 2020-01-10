@@ -1,7 +1,7 @@
 package com.example.calendarattempt4;
 import java.sql.*;
 
-public class child{
+public class child extends MainActivity{
     // Initialises objects
     protected int child_ID;         //Stores CHILD's ID, unique, used for database search
     protected int parent_ID;        //Stores PARENT's ID which CHILD belongs to
@@ -27,6 +27,20 @@ public class child{
         while(rset.next()) {
             this.child_ID = rset.getInt("Child_ID_"+child_num);
         }
+        switch (child_num) {
+            case 1:
+                this.child_ID = P.getCID_1();
+                break;
+            case 2:
+                this.child_ID = P.getCID_2();
+                break;
+            case 3:
+                this.child_ID = P.getCID_3();
+                break;
+        }
+
+
+
         // Gets CHILD's data using CHILD ID
         sqlStr = "SELECT Child_name, animal, age, weight, height, dates_filled  FROM children WHERE CID ="+child_ID+";";
         rset=s.executeQuery(sqlStr);
