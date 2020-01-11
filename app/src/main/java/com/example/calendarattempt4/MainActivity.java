@@ -7,6 +7,7 @@ import android.os.Bundle;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
@@ -14,9 +15,12 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import android.view.MenuItem;
+import android.widget.CalendarView;
 import android.widget.TextView;
 
+import java.util.Locale;
 import java.util.Random;
+import java.util.Calendar;
 
 import android.view.View;
 
@@ -73,7 +77,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private double[]  y_array = new double[300];
     // Log-in state
     static boolean logged_in = true;
-
+    private Button entry_button;
+    private String date_chosen;
+    private CalendarView mCalendarView;
+    private int togglers[] = {0,0,0,0,0,0,0,0};
+    private boolean new_data = true;
+    private int y_val;
 
 
     @Override
@@ -140,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewport.setMinY(0);
         viewport.setMaxY(12);
         viewport.setMinX(00);
-        viewport.setMaxX(50);
+        viewport.setMaxX(2);
         viewport.setScrollable(true);
         viewport.setScalable(true);
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Weeks ago");
@@ -267,15 +276,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // we're going to simulate real time with thread that append data to the graph
         new Thread(new Runnable() {
-
             @Override
             public void run() {
-                // we add 100 new entries
-                for (int i = 0; i < 50; i++) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+                String currentDateandTime = sdf.format(new Date());
+                date_chosen = currentDateandTime;
+                int runningTot = display_answers();
+                System.out.println("Initial Running Total:\t" + runningTot);
+                //int lastX = 0;
+
+                // we add 3 new entries
+                for (int i = 0; i < 1; i++) {
+                    //start live plotting with current date
+                    for (int j = 0; j < 6; j++) { //for loop takes in 7 days and plots 1 datapoint
+                        //should find a way to -1 to every date until 7 days and then plot 1 datapoint
+                        Calendar c = Calendar.getInstance();
+                        try{
+                            c.setTime(sdf.parse(date_chosen));
+                        } catch(ParseException e){
+                            e.printStackTrace();
+                        }
+                        c.add(Calendar.DAY_OF_MONTH, -1);
+                        date_chosen = sdf.format(c.getTime());
+
+                        runningTot = runningTot + display_answers();
+                        System.out.println("Running Total:\t" + runningTot);
+                        //lastX++;
+                    }
+
+                    final int final_value = runningTot;
+                    //final int final_X = lastX;
+                    System.out.println("PLOTPLOTPLOTTTTTT\t:\t" + final_value);
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            series.appendData(new DataPoint(lastX++, RANDOM.nextDouble() * 10d), false, 50);
+                            //y_val = final_value;
+                            series.appendData(new DataPoint(lastX++, final_value), false, 50);
+                            System.out.println("GRAPHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\t:\t" + final_value);
+                            System.out.println("GRAPHHH XXXX\t:\t" + lastX);
                         }
                     });
                 }
@@ -285,9 +324,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
+    //Function to retrieve data from database and plot live
 
+    public int display_answers() {
+        int total_sum = 0;
+        try {
+            if (checkDay_on_state_change(date_chosen)) {
+                new_data = false;
+                // Converts 1 and 0 into int variable array
+                for (int i = 0; i<MainActivity.D.answers.length(); i++) {
+                    if(MainActivity.D.answers.charAt(i) == '1') {
+                        togglers[i] = 1;
+                    } else if (MainActivity.D.answers.charAt(i) == '0') {
+                        togglers[i] = 0;
+                    }
+                }
+            } else {
+                new_data = true;
+                for (int i = 0; i < togglers.length; i++){
+                    togglers[i] = 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i<togglers.length; i++) {
+            total_sum = total_sum + togglers[i];
+        }
+        return total_sum;
+    }
 
-
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
