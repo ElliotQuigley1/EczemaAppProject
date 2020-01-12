@@ -8,7 +8,6 @@ env:
   - ANDROID_BUILD_TOOLS_VERSION=26.1.1
   - ANDROID_ABI=armeabi-v7a
   
-
  
 android:
   components:

@@ -73,7 +73,7 @@ public class childTest {
         Assert.assertEquals(C.getDates(), input);
     }
 
-    @Test
+    /*@Test
     public void testConnect(){
         child C = new child();
         String Jason = "Jason Doe";
@@ -85,5 +85,5 @@ public class childTest {
             e.printStackTrace();
         }
 
-    }
+    }*/
 }
