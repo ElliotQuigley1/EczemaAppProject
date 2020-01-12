@@ -3,6 +3,9 @@ package com.example.calendarattempt4;
 import android.content.Intent;
 import android.os.Bundle;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
@@ -69,8 +72,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Prepares values for graph plotting
     private int lastX = -10;
 
-    // Log-in state
-    static boolean logged_in = true;
 
     private int togglers[] = {0,0,0,0,0,0,0,0};
 
@@ -82,26 +83,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-        // NOTE TO SELF: Verify if user has been logged in, prompts log in activity if not
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-
+        if(SaveSharedPreference.getUserName(MainActivity.this).length() == 0)
+        {
+            Intent intent = new Intent(MainActivity.this, Log_in.class);
+            startActivity(intent);
+        }
+        else
+        {
+            // Stay at the current activity.
+        }
         // Connects Database and displays current date data
         if (db.connect()) {
             s = db.getConnection();
             // Passes on Statement s to parent
             P.connect(s);
             try {
+                P.login(SaveSharedPreference.getUserName(MainActivity.this),SaveSharedPreference.getPassword(MainActivity.this));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
                 date_chosen = sdf.format(nowday);
                 // Passes on Statement s to child and selects CID depending on selected child
                 selectChild_button(child_selected);
-                //checkDay_on_state_change(date_chosen); // can remove???????? A[I think this can be removed]
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(this, "CANNOT CONNECT DB", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "CANNOT CONNECT to DATABASE", Toast.LENGTH_LONG).show();
         }
 
 
@@ -116,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_C2, R.id.nav_C3,
-                R.id.nav_c_add, R.id.nav_share, R.id.nav_send)
+                R.id.nav_c_add, R.id.nav_logoff)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -141,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Viewport viewport = graph.getViewport();
         viewport.setYAxisBoundsManual(true);
         viewport.setMinY(0);
-        viewport.setMaxY(50);
+        viewport.setMaxY(28);
         viewport.setMinX(-10);
         viewport.setMaxX(0);
         viewport.setScrollable(true);
@@ -152,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
         staticLabelsFormatter.setHorizontalLabels(new String[] {"10","9","8","7","6","5","4","3","2","1","0"});
         graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+        score = (TextView) findViewById(R.id.score_display);
+        score.setText("POEM Scores for the past 10 weeks");
 
 
     }
@@ -160,20 +172,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // NOTE TO SELF: Code here to pass on add child / log-out from navigation drawer
+
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_home:
                 //Toast.makeText(this, "Child 1", Toast.LENGTH_SHORT).show();
                 child_selected = 1;
+                try {
+                    selectChild_button(child_selected);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.nav_C2:
                 //Toast.makeText(this, "Child 2", Toast.LENGTH_SHORT).show();
                 child_selected = 2;
+                try {
+                    selectChild_button(child_selected);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.nav_C3:
                 //Toast.makeText(this, "Child 3", Toast.LENGTH_SHORT).show();
                 child_selected = 3;
+                try {
+                    selectChild_button(child_selected);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.nav_c_add:
                 if(P.getChild_num() >= 3) {
@@ -183,22 +212,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     startActivity(intent);
                 }
                 break;
-            case R.id.nav_share:
-                Toast.makeText(this, "share", Toast.LENGTH_SHORT).show();
+            case R.id.nav_logoff:
+                SaveSharedPreference.setUserName(MainActivity.this,"0");
+                Toast.makeText(this, "Logged off", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, Log_in.class);
+                startActivity(intent);
                 break;
-            case R.id.nav_send:
-                Toast.makeText(this, "send", Toast.LENGTH_SHORT).show();
-                break;
+
         }
         drawer.closeDrawer(GravityCompat.START);
-
-        try {
-            selectChild_button(child_selected);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return true;
     }
+
+    // NOTE TO SELF: Create signup activity
+    private void signup_button(String userName_from_app, String password_from_app, String email_from_app) throws SQLException {
+        if (P.signup(userName_from_app, password_from_app, email_from_app) == false){
+            Toast.makeText(this, "User already exists" + P.getEmail() + ", " + P.getUsername(), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Account created", Toast.LENGTH_SHORT).show();
+            /*
+            // Code
+            Prompts makeChild_button activity to create child
+             */
+        }
+    }
+
+    // NOTE TO SELF: Create login activity
+    public static boolean LogIn_button(String userName_from_app, String password_from_app) throws SQLException {
+
+        //InputStream inputStream = new FileInputStream("src/main/resources/hhhhhhhhh.jpg"); //You can get an inputStream using any IO API
+
+        //File outputfile = new File("src/main/resources/account.txt");
+        //IO.write(image, "png", outputfile);
+
+        return P.login(userName_from_app, password_from_app);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
 
 
     @Override
@@ -216,15 +276,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Runs with child_num_from_app from onNavigationItemSelected() to connect DB with corresponding child_num
     public void selectChild_button(int child_num_from_app) throws SQLException {
         C.connect(s, P.getParent_ID(), child_num_from_app);
-        score = (TextView) findViewById(R.id.score_display);
-        score.setText("Previous POEM Scores");
         Value = (TextView) findViewById(R.id.Value);
         Value.setText("Child name:\t\t\t" + "\nAge:\t\t\t" + "\nHeight (cm):\t\t\t" + "\nWeight (kg):\t\t\t");
         Data = (TextView) findViewById(R.id.Data);
         Data.setText(C.getName() + "\n" + C.getAge() + "\n" + C.getHeight() + "\n" + C.getWeight());
 
 
-        // we're going to simulate real time with thread that append data to the graph
+        // Gets child past POEM score and refreshes graphview
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -260,29 +318,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }).start();
     }
 
-    // NOTE TO SELF: Create signup activity
-    private void signup_button(String userName_from_app, String password_from_app, String email_from_app) throws SQLException {
-        if (P.signup(userName_from_app, password_from_app, email_from_app) == false){
-            Toast.makeText(this, "User already exists" + P.getEmail() + ", " + P.getUsername(), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Account created", Toast.LENGTH_SHORT).show();
-            /*
-            // Code
-            Prompts makeChild_button activity to create child
-             */
-        }
-    }
 
-    // NOTE TO SELF: Create login activity
-    private void LogIn_button(String userName_from_app, String password_from_app) throws SQLException {
-        if (P.login(userName_from_app, password_from_app) == true){
-            Toast.makeText(this, "LOGGED IN\nUser email:\t" + P.getUsername(), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this,"WRONG LOG IN" , Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    // NOTE TO SELF: Create login activity
+    // Deletes currently selected child
     private void delete_child(int child_selected) {
         if(P.getChild_num()>=1) {
             Intent intent = new Intent(MainActivity.this, Delete_child.class);
@@ -294,47 +331,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    // NOTE TO SELF: have to create cross checking between DB and navcontroller to display the right amount of children
-    // NOTE TO SELF: Create make_child activity
-    public void makeChild_button(String name_from_app) throws SQLException {
-
-    }
-    ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // NOTE TO SELF: hardcoded texts and graphs, will be modified to show day info and trend graph
     @Override
     protected void onResume() {
         super.onResume();
-        try {
-            P.login("example_username","example_password");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         // Set navigation drawer menu based on number of children of user
         NavigationView navigationView = findViewById(R.id.nav_view);
         Menu menu = navigationView.getMenu();
-        if (logged_in) {
-            switch (P.getChild_num()) {
-                case 0:
-                    menu.findItem(R.id.nav_home).setVisible(false);
-                case 1:
-                    menu.findItem(R.id.nav_C2).setVisible(false);
-                case 2:
-                    menu.findItem(R.id.nav_C3).setVisible(false);
-                    break;
-                case 3:
-                    //menu.findItem(R.id.nav_c_add).setVisible(false);
-            }
+        switch (P.getChild_num()) {
+            case 0:
+                menu.findItem(R.id.nav_home).setVisible(false);
+            case 1:
+                menu.findItem(R.id.nav_C2).setVisible(false);
+            case 2:
+                menu.findItem(R.id.nav_C3).setVisible(false);
+                break;
+            case 3:
         }
 
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //Function to retrieve data from database and plot live
 
+    //Function to retrieve data from database and plot live
     public int get_answers() {
         int total_sum = 0;
         try {
@@ -358,10 +378,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for (int i = 0; i<togglers.length; i++) {
             total_sum = total_sum + togglers[i];
         }
-        return total_sum;
+        return total_sum/2;
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

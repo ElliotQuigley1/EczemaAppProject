@@ -66,10 +66,11 @@
 
         <TextView
             android:id="@+id/score_display"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="216dp"
+            android:layout_width="240dp"
+            android:layout_height="74dp"
+            android:layout_marginTop="224dp"
             android:text="Score:"
+            android:textAlignment="center"
             android:textColor="@android:color/black"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
