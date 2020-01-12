@@ -147,9 +147,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Viewport viewport = graph.getViewport();
         viewport.setYAxisBoundsManual(true);
         viewport.setMinY(0);
-        viewport.setMaxY(12);
+        viewport.setMaxY(50);
         viewport.setMinX(00);
-        viewport.setMaxX(2);
+        viewport.setMaxX(10);
         viewport.setScrollable(true);
         viewport.setScalable(true);
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Weeks ago");
@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //int lastX = 0;
 
                 // we add 3 new entries
-                for (int i = 0; i < 1; i++) {
+                for (int i = 0; i < 8; i++) {
                     //start live plotting with current date
                     for (int j = 0; j < 6; j++) { //for loop takes in 7 days and plots 1 datapoint
                         //should find a way to -1 to every date until 7 days and then plot 1 datapoint
@@ -305,6 +305,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
 
                     final int final_value = runningTot;
+                    runningTot = 0;
                     //final int final_X = lastX;
                     System.out.println("PLOTPLOTPLOTTTTTT\t:\t" + final_value);
 
