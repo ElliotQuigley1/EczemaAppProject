@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Gets current date when user opens app
     //static Date nowday = Calendar.getInstance().getTime();
     static Date nowday = new Date();
-    static String date = nowday.toString();
+    private String date_chosen;
     // Prepares values for graph plotting
     private static final Random RANDOM = new Random();
     protected LineGraphSeries<DataPoint> series;
@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Log-in state
     static boolean logged_in = true;
     private Button entry_button;
-    private String date_chosen;
     private CalendarView mCalendarView;
     private int togglers[] = {0,0,0,0,0,0,0,0};
     private boolean new_data = true;
@@ -104,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // Passes on Statement s to child and selects CID depending on selected child
                 selectChild_button(child_selected);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                String date_chosen = sdf.format(nowday);
+                date_chosen = sdf.format(nowday);
                 checkDay_on_state_change(date_chosen); // can remove???????? A[I think this can be removed]
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -302,8 +301,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void run() {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
-                String currentDateandTime = sdf.format(new Date());
-                date_chosen = currentDateandTime;
+                //String currentDateandTime = sdf.format(new Date());
+                //date_chosen = currentDateandTime;
                 int runningTot = display_answers();
                 System.out.println("Initial Running Total:\t" + runningTot);
                 //int lastX = 0;
@@ -311,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // we add 3 new entries
                 for (int i = 0; i < 10; i++) {
                     //start live plotting with current date
-                    for (int j = 0; j < 6; j++) { //for loop takes in 7 days and plots 1 datapoint
+                    for (int j = 0; j <= 6; j++) { //for loop takes in 7 days and plots 1 datapoint
                         //should find a way to -1 to every date until 7 days and then plot 1 datapoint
                         Calendar c = Calendar.getInstance();
                         try{

@@ -11,7 +11,7 @@
         tools:context=".CalendarActivity">
 
         <CalendarView
-            android:id="@+id/smth"
+            android:id="@+id/calendar_view"
             android:layout_width="414dp"
             android:layout_height="294dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,34 +35,29 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="11dp"
             android:layout_marginEnd="309dp"
-            android:layout_marginRight="309dp"
             android:text="@string/symptoms"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/smth" />
+            app:layout_constraintTop_toBottomOf="@+id/calendar_view" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="70dp"
             android:layout_height="20dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="12dp"
             android:text="CRACKING"
-            app:layout_constraintStart_toEndOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_cracking" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView2"
+            app:layout_constraintEnd_toStartOf="@+id/textView5"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView2" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="46dp"
             android:layout_height="19dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginRight="3dp"
+            android:layout_marginTop="12dp"
             android:text="ITCHY"
             app:layout_constraintEnd_toStartOf="@+id/textView4"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView_itchy" />
 
@@ -70,43 +65,41 @@
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
             android:text="OOZING"
-            app:layout_constraintEnd_toEndOf="@+id/imageView_oozing"
-            app:layout_constraintTop_toTopOf="@+id/imageView_oozing" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
+            app:layout_constraintEnd_toStartOf="@+id/textView8"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView4" />
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
-            android:layout_marginEnd="92dp"
-            android:layout_marginRight="92dp"
             android:text="DRY"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView_dry" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView8"
+            app:layout_constraintEnd_toStartOf="@+id/textView9"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView8" />
 
         <TextView
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:text="FLAKING"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView6"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView_dry" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView6" />
 
         <TextView
             android:id="@+id/textView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="16dp"
             android:text="BLEEDING"
-            app:layout_constraintStart_toEndOf="@+id/textView5"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_bleeding" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView5"
+            app:layout_constraintEnd_toStartOf="@+id/textView6"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView5" />
 
         <TextView
             android:id="@+id/textView3"
@@ -124,13 +117,10 @@
             android:id="@+id/imageView_cracking"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
             android:contentDescription="@string/foto_cracking"
             app:layout_constraintEnd_toStartOf="@+id/imageView_oozing"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/imageView_itchy"
             app:layout_constraintTop_toBottomOf="@+id/textView7"
             app:srcCompat="@drawable/cracking" />
@@ -139,56 +129,54 @@
             android:id="@+id/imageView_dry"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="48dp"
-            android:layout_marginEnd="11dp"
-            android:layout_marginRight="11dp"
+            android:layout_marginTop="20dp"
             android:contentDescription="@string/dry"
             app:layout_constraintEnd_toStartOf="@+id/imageView_flaking"
-            app:layout_constraintTop_toBottomOf="@+id/smth"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imageView_bleeding"
+            app:layout_constraintTop_toBottomOf="@+id/textView7"
             app:srcCompat="@drawable/dry" />
 
         <ImageView
             android:id="@+id/imageView_oozing"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toStartOf="@+id/imageView_bleeding"
-            app:layout_constraintHorizontal_bias="0.822"
-            app:layout_constraintStart_toEndOf="@+id/textView7"
-            app:layout_constraintTop_toBottomOf="@+id/smth"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imageView_cracking"
+            app:layout_constraintTop_toBottomOf="@+id/textView7"
             app:srcCompat="@drawable/oozing" />
 
         <ImageView
             android:id="@+id/imageView_bleeding"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="48dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginRight="12dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toStartOf="@+id/imageView_dry"
-            app:layout_constraintTop_toBottomOf="@+id/smth"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imageView_oozing"
+            app:layout_constraintTop_toBottomOf="@+id/textView7"
             app:srcCompat="@drawable/bleeding" />
 
         <ImageView
             android:id="@+id/imageView_flaking"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toBottomOf="@+id/textView9"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imageView_dry"
+            app:layout_constraintTop_toBottomOf="@+id/textView7"
             app:srcCompat="@drawable/flaking" />
 
         <ImageView
             android:id="@+id/imageView_itchy"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toStartOf="@+id/imageView_cracking"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView7"
             app:srcCompat="@drawable/itchy" />
@@ -235,13 +223,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="271dp"
-            android:layout_marginRight="271dp"
             android:text="CREAM"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/textView10"
             app:layout_constraintTop_toBottomOf="@+id/imageView_ointment" />
 
@@ -249,25 +235,24 @@
             android:id="@+id/takephoto"
             android:layout_width="104dp"
             android:layout_height="51dp"
-            android:layout_marginTop="56dp"
-            android:layout_marginEnd="152dp"
+            android:layout_marginEnd="288dp"
+            android:layout_marginBottom="36dp"
             android:background="@color/colorAccent"
             android:text="TAKE PHOTO"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+            app:layout_constraintBottom_toTopOf="@+id/entry_button"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="167dp"
-            android:layout_height="126dp"
+            android:layout_width="172dp"
+            android:layout_height="232dp"
             android:layout_marginTop="42dp"
             android:layout_marginBottom="40dp"
             app:layout_constraintBottom_toTopOf="@+id/entry_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.727"
             app:layout_constraintStart_toEndOf="@+id/textView11"
             app:layout_constraintTop_toTopOf="@+id/textView8"
-            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/ic_menu_gallery" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
