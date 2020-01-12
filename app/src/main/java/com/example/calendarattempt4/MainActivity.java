@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView score;
     private Button btngocalendar;
     // Initialises objects
-    int child_selected = 1;
+    static int child_selected = 1;
     public Database db = new Database();
     static Statement s = null;
     static parent P = new parent(); // THIS LINE CREATES PARENT OBJECT BASED ON HARDCODED USERNAME PASSWORD AND ID
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_C1, R.id.nav_C2, R.id.nav_C3,
+                R.id.nav_home, R.id.nav_C2, R.id.nav_C3,
                 R.id.nav_c_add, R.id.nav_share, R.id.nav_send)
                 .setDrawerLayout(drawer)
                 .build();
@@ -155,21 +155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Weeks ago");
         graph.getGridLabelRenderer().setVerticalAxisTitle("Severity of Eczema (POEM)");
 
-        // Set navigation drawer menu based on number of children of user
-        Menu menu = navigationView.getMenu();
-        if (logged_in) {
-            switch (P.getChild_num()) {
-                case 2:
-                    menu.findItem(R.id.nav_C3).setVisible(false);
-                case 1:
-                    menu.findItem(R.id.nav_C2).setVisible(false);
-                case 0:
-                    menu.findItem(R.id.nav_C1).setVisible(false);
-                    break;
-                case 3:
-                    //menu.findItem(R.id.nav_c_add).setVisible(false);
-            }
-        }
+
 
     }
 
@@ -181,24 +167,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_home:
-                Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.nav_C1:
-                Toast.makeText(this, "Child 1", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Child 1", Toast.LENGTH_SHORT).show();
                 child_selected = 1;
                 break;
             case R.id.nav_C2:
-                Toast.makeText(this, "Child 2", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Child 2", Toast.LENGTH_SHORT).show();
                 child_selected = 2;
                 break;
             case R.id.nav_C3:
-                Toast.makeText(this, "Child 3", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Child 3", Toast.LENGTH_SHORT).show();
                 child_selected = 3;
                 break;
             case R.id.nav_c_add:
-                Toast.makeText(this, "Add child", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, Add_child.class);
-                startActivity(intent);
+                if(P.getChild_num() >= 3) {
+                    Toast.makeText(this, "Only 3 children can be added! Delete one before adding!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(MainActivity.this, Child_info.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.nav_share:
                 Toast.makeText(this, "share", Toast.LENGTH_SHORT).show();
@@ -211,16 +197,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         try {
             selectChild_button(child_selected);
-            Toast.makeText(this, "Child updated", Toast.LENGTH_SHORT).show();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return true;
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_delete_child:
+                delete_child(child_selected);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     // Runs with child_num_from_app from onNavigationItemSelected() to connect DB with corresponding child_num
-    public static void selectChild_button(int child_num_from_app) throws SQLException {
+    public void selectChild_button(int child_num_from_app) throws SQLException {
         C.connect(s, P.getParent_ID(), child_num_from_app);
+        score = (TextView) findViewById(R.id.score_display);
+        score.setText("Previous POEM Scores");
+        Value = (TextView) findViewById(R.id.Value);
+        Value.setText("Child name:\t\t\t" + "\nAge:\t\t\t" + "\nHeight (cm):\t\t\t" + "\nWeight (kg):\t\t\t");
+        Data = (TextView) findViewById(R.id.Data);
+        Data.setText(C.getName() + "\n" + C.getAge() + "\n" + C.getHeight() + "\n" + C.getWeight());
     }
 
     // NOTE TO SELF: Create signup activity
@@ -245,15 +249,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    // NOTE TO SELF: Create login activity
+    private void delete_child(int child_selected) {
+        if(P.getChild_num()>=1) {
+            Intent intent = new Intent(MainActivity.this, Delete_child.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this,"No child" , Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+
     // NOTE TO SELF: have to create cross checking between DB and navcontroller to display the right amount of children
     // NOTE TO SELF: Create make_child activity
     public void makeChild_button(String name_from_app) throws SQLException {
-        if (C.create(name_from_app, P.getParent_ID()) == false){
-            Toast.makeText(this, "Child already exists:" + name_from_app, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Child created", Toast.LENGTH_SHORT).show();
-            // ASKS FOR CHILDREN INFO
-        }
+
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -264,15 +275,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-        score = (TextView) findViewById(R.id.score_display);
-        score.setText("Previous POEM Scores");
-        score.setTextColor(Color.BLACK);
-        Value = (TextView) findViewById(R.id.Value);
-        Value.setText("Child name:\t\t\t" + "\nAge:\t\t\t" + "\nHeight:\t\t\t" + "\nWeight:\t\t\t");
-        Value.setTextColor(Color.BLACK);
-        Data = (TextView) findViewById(R.id.Data);
-        Data.setText(C.name + "\n" + C.age + "\n" + C.height + "\n" + C.weight);
-        Data.setTextColor(Color.BLACK);
+        try {
+            P.login("example_username","example_password");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        // Set navigation drawer menu based on number of children of user
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        Menu menu = navigationView.getMenu();
+        if (logged_in) {
+            switch (P.getChild_num()) {
+                case 0:
+                    menu.findItem(R.id.nav_home).setVisible(false);
+                case 1:
+                    menu.findItem(R.id.nav_C2).setVisible(false);
+                case 2:
+                    menu.findItem(R.id.nav_C3).setVisible(false);
+                    break;
+                case 3:
+                    //menu.findItem(R.id.nav_c_add).setVisible(false);
+            }
+        }
 
         // we're going to simulate real time with thread that append data to the graph
         new Thread(new Runnable() {
@@ -361,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // Passes on Statement s to day and retrieve data for selected day
     public static boolean checkDay_on_state_change(String date) throws SQLException {
-        if (D.check(C.child_ID, P.getParent_ID(), date, s)){
+        if (D.check(C.getChild_ID(), P.getParent_ID(), date, s)){
             System.out.println("Answers for selected date:\t" + D.answers);
             // displays at editText on Android Studio
             return true;
@@ -372,13 +395,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // Create answers for new date
-    public static void makeDay(String newAnswers) throws SQLException {
-        D.create(newAnswers);
+    public static void makeDay(String newAnswers, String image) throws SQLException {
+        D.create(newAnswers, image);
     }
 
     // Update existing answers
-    public static void rewriteDay(String newAnswers) throws SQLException {
-        D.update(newAnswers);
+    public static void rewriteDay(String newAnswers, String image) throws SQLException {
+        D.update(newAnswers, image);
     }
 
     // Sets button action
@@ -540,19 +563,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     "                          CID SERIAL PRIMARY KEY,\n" +
                     "                          Child_name varchar(32) NOT NULL,\n" +
                     "                          PID varchar(32) NOT NULL,\n" +
-                    "                          Animal varchar(32),\n" +
                     "                          Age varchar(32),\n" +
                     "                          Weight varchar(32),\n" +
                     "                          Height varchar(32),\n" +
-                    "                          Dates_filled varchar(32)\n" +
                     ");\n" +
-                    "insert into children (Child_name,PID,Animal,Age,Weight,Height,Dates_filled) values('Fluffy','1','Puppy','13','40','143','1');";
+                    "insert into children (Child_name,PID,Age,Weight,Height) values('Fluffy','1','Puppy','13','40','143','1');";
 
             s.execute (sqlStr);
             sqlStr = "SELECT * FROM children WHERE CID=1;";
             ResultSet rset = s.executeQuery(sqlStr);
             while (rset.next()) {
-                System.out.println(rset.getInt("CID") + " " + rset.getString("animal"));
+                System.out.println(rset.getInt("CID"));
             }
             rset.close();
         } catch (Exception e) {
