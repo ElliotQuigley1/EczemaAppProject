@@ -8,11 +8,7 @@ env:
   - ANDROID_BUILD_TOOLS_VERSION=26.1.1
   - ANDROID_ABI=armeabi-v7a
   
-android {
-    lintOptions {
-          abortOnError false
-      }
- }
+
  
 android:
   components:
@@ -24,6 +20,8 @@ android:
     - 'android-sdk-preview-license-52d11cd2'
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
+  lintOptions:
+    - abortOnError= false
 
 
 before_install:
