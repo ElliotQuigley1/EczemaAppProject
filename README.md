@@ -1,4 +1,4 @@
-This android applicaiton is intended for Imperial College London BiomedicaL Engineering 3rd year Programing group Project.
+This android applicaiton is intended for Imperial College London Biomedical Engineering 3rd year Programing group Project.
 
 
 INSTRUCTIONS:
