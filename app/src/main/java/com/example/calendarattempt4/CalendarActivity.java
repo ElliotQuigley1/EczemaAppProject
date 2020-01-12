@@ -1,7 +1,9 @@
 package com.example.calendarattempt4;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.ByteArrayOutputStream;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,6 +35,7 @@ public class CalendarActivity extends AppCompatActivity {
     private String date_chosen;
     private Button entry_button;
     // Declares array for icons state
+    private boolean image_taken = false;
     private boolean new_data = true;
     private boolean togglers[] = {false,false,false,false,false,false,false,false};
     int[] R_id_array = {R.id.imageView_cracking,R.id.imageView_dry,R.id.imageView_oozing,R.id.imageView_bleeding,R.id.imageView_flaking,R.id.imageView_itchy,R.id.imageView_medicine,R.id.imageView_ointment};
@@ -41,6 +45,7 @@ public class CalendarActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1888;
     private ImageView imageView;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    private String image_string = null;
 
 
     @Override
@@ -78,7 +83,7 @@ public class CalendarActivity extends AppCompatActivity {
                 String date_formatted = String.format("%02d", dayOfMonth);
                 String date = year + "/" + month_formatted + "/"+ date_formatted ;
                 date_chosen = date;
-
+                image_taken = false;
                 display_answers();
             }
         });
@@ -140,6 +145,15 @@ public class CalendarActivity extends AppCompatActivity {
         for (int i = 0; i<togglers.length; i++) {
             set_icons(i);
         }
+
+        // Display image
+        if (MainActivity.D.image != null) {
+            Bitmap photo = convert(MainActivity.D.image);
+            imageView.setImageBitmap(photo);
+        } else {
+            imageView.setImageResource(R.drawable.ic_menu_gallery);
+        }
+
     }
 
     // Refresh icon state
@@ -165,11 +179,14 @@ public class CalendarActivity extends AppCompatActivity {
                 score=score+'1';
             }
         }
+        if (!image_taken) {
+            image_string = null;
+        }
         try {
             if (new_data) {
-                MainActivity.makeDay(score);
+                MainActivity.makeDay(score, image_string);
             } else {
-                MainActivity.rewriteDay(score);
+                MainActivity.rewriteDay(score, image_string);
             }
             // Shows user message for success / failure
             Toast.makeText(this, "Data saved", Toast.LENGTH_SHORT).show();
@@ -210,9 +227,28 @@ public class CalendarActivity extends AppCompatActivity {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             imageView.setImageBitmap(photo);
+            image_taken = true;
+            image_string = convert(photo);
         }
     }
 
+    public static Bitmap convert(String base64Str) throws IllegalArgumentException
+    {
+        byte[] decodedBytes = Base64.decode(
+                base64Str.substring(base64Str.indexOf(",")  + 1),
+                Base64.DEFAULT
+        );
+
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
+
+    public static String convert(Bitmap bitmap)
+    {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+
+        return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+    }
 
 
 

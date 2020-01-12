@@ -9,6 +9,7 @@ public class day {
     private int Parent_ID;            //Stores PARENT ID for each CHILD's entry
     private int Child_ID;             //Stores CHILD ID for each entry
     private String date;              //Stores actual date as a string
+    protected String image;              //Stores image as a string
     protected String answers;           //Stores answers to eczema questions as a string
     // Variable to check if data is returned from database
     protected String AUTH = null;
@@ -32,6 +33,7 @@ public class day {
     // Passes on Statement s to day and retrieve data for selected day
     public boolean check(int CID, int PID, String date, Statement s) throws SQLException {
         AUTH = null;
+        image = null;
         this.s = s;
         setParent_ID(PID);
         setChild_ID(CID);
@@ -42,6 +44,7 @@ public class day {
         while(rset.next()) {
             setDay_ID(rset.getInt("DID"));
             this.answers = rset.getString("Record");
+            this.image = rset.getString("image");
             AUTH = rset.getString("DID");
         }
         if (AUTH != null){
@@ -55,14 +58,16 @@ public class day {
     }
 
     // Update existing answers
-    public void update(String answers) throws SQLException {
-        String sqlStr = "UPDATE dates SET record = \'" + answers + "\' WHERE DID = \'" + this.Day_ID +"\';";
+    public void update(String answers, String image) throws SQLException {
+        String sqlStr = "UPDATE dates SET record = \'" + answers + "\' WHERE DID = \'" + getDay_ID() +"\';";
+        s.execute (sqlStr);
+        sqlStr = "UPDATE dates SET image = \'" + image + "\' WHERE DID = \'" + getDay_ID() +"\';";
         s.execute (sqlStr);
     }
 
     // Create answers for new date
-    public void create(String answers) throws SQLException {
-        String sqlStr = "INSERT INTO public.dates(cid, pid, date, record) VALUES (\'"+ this.Child_ID +"\',\'"+ this.Parent_ID +"\',\'"+ this.date +"\',\'"+ answers +"\');";
+    public void create(String answers, String image) throws SQLException {
+        String sqlStr = "INSERT INTO public.dates(cid, pid, date, record, image) VALUES (\'"+ getChild_ID() +"\',\'"+ getParent_ID() +"\',\'"+ getDate() +"\',\'"+ answers +"\',\'" + image + "\');";
         s.execute (sqlStr);
     }
 }

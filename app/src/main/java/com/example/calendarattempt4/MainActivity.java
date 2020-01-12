@@ -304,13 +304,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // Create answers for new date
-    public static void makeDay(String newAnswers) throws SQLException {
-        D.create(newAnswers);
+    public static void makeDay(String newAnswers, String image) throws SQLException {
+        D.create(newAnswers, image);
     }
 
     // Update existing answers
-    public static void rewriteDay(String newAnswers) throws SQLException {
-        D.update(newAnswers);
+    public static void rewriteDay(String newAnswers, String image) throws SQLException {
+        D.update(newAnswers, image);
     }
 
     // Sets button action
