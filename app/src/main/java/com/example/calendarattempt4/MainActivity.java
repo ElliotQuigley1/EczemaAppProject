@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         TextView P_username = (TextView) findViewById(R.id.username_view);
-        P_username.setText("Username: " + P.getUsername());
+        P_username.setText(P.getUsername());
 
         // Customize graph viewport
         Viewport viewport = graph.getViewport();
@@ -611,4 +611,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 }
+
 
