@@ -57,7 +57,7 @@
             android:layout_height="55dp"
             android:background="#119587"
             android:onClick="calendar_button"
-            android:text="Calander"
+            android:text="Calandar"
             android:textColor="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -170,9 +170,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 child_selected = 3;
                 break;
             case R.id.nav_c_add:
-                Toast.makeText(this, "Add child", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, Child_info.class);
-                startActivity(intent);
+                if(P.getChild_num() >= 3) {
+                    Toast.makeText(this, "Only 3 children can be added! Delete one before adding!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(MainActivity.this, Child_info.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.nav_share:
                 Toast.makeText(this, "share", Toast.LENGTH_SHORT).show();
@@ -197,9 +200,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.action_edit_child:
-                delete_child(child_selected);
-                return true;
             case R.id.action_delete_child:
                 delete_child(child_selected);
                 return true;
