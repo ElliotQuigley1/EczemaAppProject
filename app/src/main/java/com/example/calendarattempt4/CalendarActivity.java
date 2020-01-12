@@ -204,6 +204,7 @@ public class CalendarActivity extends AppCompatActivity {
 
 
     // Camera function settings
+    //part of the camera functions settings code has been completed from https://www.codota.com/code/java/methods/android.app.Activity/onRequestPermissionsResult
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
@@ -251,6 +252,7 @@ public class CalendarActivity extends AppCompatActivity {
 
         return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
     }
+
 
 
 
