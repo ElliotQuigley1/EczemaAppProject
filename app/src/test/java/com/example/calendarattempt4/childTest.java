@@ -33,13 +33,6 @@ public class childTest {
         Assert.assertEquals(C.getName(), input);
     }
 
-    @Test
-    public void testAnimal() {
-        child C = new child();
-        String input = "Hello";
-        C.setAnimal(input);
-        Assert.assertEquals(C.getAnimal(), input);
-    }
 
     @Test
     public void testAge() {
@@ -65,13 +58,6 @@ public class childTest {
         Assert.assertEquals(C.getHeight(), input);
     }
 
-    @Test
-    public void testDates() {
-        child C = new child();
-        String input = "Hello";
-        C.setDates(input);
-        Assert.assertEquals(C.getDates(), input);
-    }
 
     /*@Test
     public void testConnect(){

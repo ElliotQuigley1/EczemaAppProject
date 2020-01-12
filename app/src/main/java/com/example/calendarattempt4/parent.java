@@ -33,6 +33,8 @@ public class parent {
 
     // Retrieves info associated with parent login credentials and return state to main class
     public boolean login(String username, String password) throws SQLException {
+        setUsername(username);
+        setPassword(password);
         String sqlStr = "SELECT PID, email, Child_num, Child_ID_1, Child_ID_2, Child_ID_3  FROM parents WHERE username =\'" + username + "\' and password = \'" + password + "\';";
         ResultSet rset = s.executeQuery(sqlStr);
         AUTH = null;
