@@ -1,7 +1,6 @@
 package com.example.calendarattempt4;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import java.sql.ResultSet;
@@ -45,7 +44,6 @@ import android.widget.Toast;
 import java.sql.SQLException;
 import java.util.Date;
 
-import static java.time.LocalDate.now;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -142,6 +140,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         GraphView graph = (GraphView) findViewById(R.id.graph);
         series = new LineGraphSeries<>();
         graph.addSeries(series);
+
+
+        TextView P_username = (TextView) findViewById(R.id.username_view);
+        P_username.setText("Username: " + P.getUsername());
 
         // Customize graph viewport
         Viewport viewport = graph.getViewport();
