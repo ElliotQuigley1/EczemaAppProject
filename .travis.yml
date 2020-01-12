@@ -51,7 +51,4 @@ android:
  script:
 - "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
 
-lintOptions {
-    abortOnError false
-}
 
