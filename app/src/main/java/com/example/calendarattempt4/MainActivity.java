@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     static boolean logged_in = true;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -217,6 +216,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Data = (TextView) findViewById(R.id.Data);
         Data.setText(C.getName() + "\n" + C.getAge() + "\n" + C.getHeight() + "\n" + C.getWeight());
     }
+
+
 
     // NOTE TO SELF: Create signup activity
     private void signup_button(String userName_from_app, String password_from_app, String email_from_app) throws SQLException {
