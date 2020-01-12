@@ -65,23 +65,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     static child C = new child();
     static day D = new day();
     // Gets current date when user opens app
-    //static Date nowday = Calendar.getInstance().getTime();
     static Date nowday = new Date();
     private String date_chosen;
     // Prepares values for graph plotting
-    private static final Random RANDOM = new Random();
     protected LineGraphSeries<DataPoint> series;
     private int lastX = 0;
     protected DataPoint E[];
-    private double[]  x_array = new double[300];
-    private double[]  y_array = new double[300];
+
     // Log-in state
     static boolean logged_in = true;
-    private Button entry_button;
-    private CalendarView mCalendarView;
+
     private int togglers[] = {0,0,0,0,0,0,0,0};
-    private boolean new_data = true;
-    private int y_val;
+
 
 
     @Override
@@ -148,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewport.setMinY(0);
         viewport.setMaxY(50);
         viewport.setMinX(00);
-        viewport.setMaxX(10);
+        viewport.setMaxX(11);
         viewport.setScrollable(true);
         viewport.setScalable(true);
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Weeks ago");
@@ -303,41 +298,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
                 //String currentDateandTime = sdf.format(new Date());
                 //date_chosen = currentDateandTime;
-                int runningTot = display_answers();
-                System.out.println("Initial Running Total:\t" + runningTot);
                 //int lastX = 0;
 
                 // we add 3 new entries
                 for (int i = 0; i < 10; i++) {
                     //start live plotting with current date
+                    int runningTot = 0;
                     for (int j = 0; j <= 6; j++) { //for loop takes in 7 days and plots 1 datapoint
                         //should find a way to -1 to every date until 7 days and then plot 1 datapoint
-                        Calendar c = Calendar.getInstance();
+                        runningTot = runningTot + get_answers();
+                        System.out.println("Date:\t" + date_chosen);
+
+                        Calendar calendar = Calendar.getInstance();
                         try{
-                            c.setTime(sdf.parse(date_chosen));
+                            calendar.setTime(sdf.parse(date_chosen));
                         } catch(ParseException e){
                             e.printStackTrace();
                         }
-                        c.add(Calendar.DAY_OF_MONTH, -1);
-                        date_chosen = sdf.format(c.getTime());
-
-                        runningTot = runningTot + display_answers();
-                        System.out.println("Running Total:\t" + runningTot);
-                        //lastX++;
+                        calendar.add(Calendar.DAY_OF_MONTH, -1);
+                        date_chosen = sdf.format(calendar.getTime());
                     }
 
                     final int final_value = runningTot;
-                    runningTot = 0;
                     //final int final_X = lastX;
-                    System.out.println("PLOTPLOTPLOTTTTTT\t:\t" + final_value);
 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             //y_val = final_value;
                             series.appendData(new DataPoint(lastX++, final_value), false, 50);
-                            System.out.println("GRAPHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\t:\t" + final_value);
-                            System.out.println("GRAPHHH XXXX\t:\t" + lastX);
                         }
                     });
                 }
@@ -349,11 +338,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //Function to retrieve data from database and plot live
 
-    public int display_answers() {
+    public int get_answers() {
         int total_sum = 0;
         try {
             if (checkDay_on_state_change(date_chosen)) {
-                new_data = false;
                 // Converts 1 and 0 into int variable array
                 for (int i = 0; i<MainActivity.D.answers.length(); i++) {
                     if(MainActivity.D.answers.charAt(i) == '1') {
@@ -363,7 +351,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             } else {
-                new_data = true;
                 for (int i = 0; i < togglers.length; i++){
                     togglers[i] = 0;
                 }
@@ -384,11 +371,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Passes on Statement s to day and retrieve data for selected day
     public static boolean checkDay_on_state_change(String date) throws SQLException {
         if (D.check(C.getChild_ID(), P.getParent_ID(), date, s)){
-            System.out.println("Answers for selected date:\t" + D.answers);
             // displays at editText on Android Studio
             return true;
         } else {
-            System.out.println("This day is empty");
             return false;
         }
     }
