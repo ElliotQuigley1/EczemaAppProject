@@ -21,7 +21,7 @@ public class day {
     public day(){}
 
     public void setChild_ID(int cid){ this.Child_ID = cid ;}
-    public void setDate(String dat) {this.date = dat ;}
+    public void setDate(String date) {this.date = date ;}
     public void setDay_ID(int did) { this.Day_ID = did; }
     public void setParent_ID(int pid){ this.Parent_ID = pid; }
     public String getDate() { return date; }
