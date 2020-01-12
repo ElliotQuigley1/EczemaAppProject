@@ -32,7 +32,7 @@ public class parent {
         setChild_num(Child_num = 3);
         setCID_1(1);
         setCID_2(2);
-        setCID_3(3);
+        setCID_3(6);
     }
 
     // Passes on Statement s to parent
