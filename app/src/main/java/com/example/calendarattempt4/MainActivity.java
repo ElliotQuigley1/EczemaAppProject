@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean new_data = true;
     private int y_val;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         TextView P_username = (TextView) findViewById(R.id.username_view);
-        P_username.setText("Username: " + P.getUsername());
+        P_username.setText(P.getUsername());
 
         // Customize graph viewport
         Viewport viewport = graph.getViewport();
@@ -227,8 +228,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Data = (TextView) findViewById(R.id.Data);
         Data.setText(C.getName() + "\n" + C.getAge() + "\n" + C.getHeight() + "\n" + C.getWeight());
     }
-
-
 
     // NOTE TO SELF: Create signup activity
     private void signup_button(String userName_from_app, String password_from_app, String email_from_app) throws SQLException {
@@ -612,4 +611,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 }
+
 
