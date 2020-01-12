@@ -188,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         try {
             selectChild_button(child_selected);
-            Toast.makeText(this, "Child updated", Toast.LENGTH_SHORT).show();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -243,8 +242,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // NOTE TO SELF: Create login activity
     private void delete_child(int child_selected) {
-        Intent intent = new Intent(MainActivity.this, Delete_child.class);
-        startActivity(intent);
+        if(P.getChild_num()>=1) {
+            Intent intent = new Intent(MainActivity.this, Delete_child.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this,"No child" , Toast.LENGTH_SHORT).show();
+
+        }
+
     }
 
     // NOTE TO SELF: have to create cross checking between DB and navcontroller to display the right amount of children
