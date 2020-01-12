@@ -9,6 +9,12 @@ android:
     - 'android-sdk-preview-license-24333f8a63b6825ea9c5514f83c2829b004d1fee'
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
+    
+env:
+ global:
+  - Android_API=29
+  - ANDROID_BUILD_TOOLS=26.1.1
+
 before_install:
  - chmod +x gradlew
 script: 
