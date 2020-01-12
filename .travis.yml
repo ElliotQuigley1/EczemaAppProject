@@ -5,6 +5,10 @@ android:
     - build-tools-26.1.1
     - android-29
     - extra
+   licenses:
+    - 'android-sdk-preview-license-24333f8a63b6825ea9c5514f83c2829b004d1fee'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
 before_install:
  - chmod +x gradlew
 script: 
