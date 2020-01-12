@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -51,6 +50,9 @@ public class CalendarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getSupportActionBar().hide();
+
+
         setContentView(R.layout.activity_calendar_layout);
 
         // Camera OnClickListener
@@ -74,7 +76,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
 
         // Calendar OnClickListener
-        mCalendarView = findViewById(R.id.smth);
+        mCalendarView = findViewById(R.id.calendar_view);
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView CalendarView, int year, int month, int dayOfMonth) {

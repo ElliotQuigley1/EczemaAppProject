@@ -41,4 +41,5 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     runtimeOnly group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
     implementation 'com.jjoe64:graphview:4.2.2'
+    implementation 'androidx.mediarouter:mediarouter:1.1.0'
 }

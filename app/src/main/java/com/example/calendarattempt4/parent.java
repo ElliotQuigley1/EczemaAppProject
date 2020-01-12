@@ -24,16 +24,7 @@ public class parent {
     // USED FOR DEVELOPMENT
     // REAL DATA WILL BE OBTAINED WITH PARENT LOG IN
     // WILL BE DELETED BEFORE SUBMITTING
-    public parent() {
-        setParent_ID(1);
-        setUsername("example_username");
-        setPassword("example_password");
-        setEmail("example_gmail.com");
-        setChild_num(Child_num = 3);
-        setCID_1(1);
-        setCID_2(2);
-        setCID_3(3);
-    }
+    public parent() {}
 
     // Passes on Statement s to parent
     public void connect(Statement s) {
@@ -42,12 +33,13 @@ public class parent {
 
     // Retrieves info associated with parent login credentials and return state to main class
     public boolean login(String username, String password) throws SQLException {
+        setUsername(username);
+        setPassword(password);
         String sqlStr = "SELECT PID, email, Child_num, Child_ID_1, Child_ID_2, Child_ID_3  FROM parents WHERE username =\'" + username + "\' and password = \'" + password + "\';";
         ResultSet rset = s.executeQuery(sqlStr);
         AUTH = null;
         while (rset.next()) {
             setParent_ID(rset.getInt("PID"));
-            ;
             setEmail(rset.getString("email"));
             AUTH = rset.getString("PID");
             setChild_num(rset.getInt("Child_num"));
@@ -85,11 +77,7 @@ public class parent {
 
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-    public void create_child(String username, String password, String email) throws SQLException {
 
-
-    }
     public void setParent_ID(int parent_ID) { this.parent_ID = parent_ID; }
     public void setUsername(String username) { this.username = username; }
     public void setPassword(String password) { this.password = password; }
