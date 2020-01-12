@@ -10,6 +10,7 @@ import java.text.ParseException;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -63,24 +64,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     static child C = new child();
     static day D = new day();
     // Gets current date when user opens app
-    //static Date nowday = Calendar.getInstance().getTime();
     static Date nowday = new Date();
-    static String date = nowday.toString();
+    private String date_chosen;
     // Prepares values for graph plotting
-    private static final Random RANDOM = new Random();
-    protected LineGraphSeries<DataPoint> series;
-    private int lastX = 0;
-    protected DataPoint E[];
-    private double[]  x_array = new double[300];
-    private double[]  y_array = new double[300];
+    private int lastX = -10;
+
     // Log-in state
     static boolean logged_in = true;
-    private Button entry_button;
-    private String date_chosen;
-    private CalendarView mCalendarView;
+
     private int togglers[] = {0,0,0,0,0,0,0,0};
-    private boolean new_data = true;
-    private int y_val;
+
 
 
     @Override
@@ -99,11 +92,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Passes on Statement s to parent
             P.connect(s);
             try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+                date_chosen = sdf.format(nowday);
                 // Passes on Statement s to child and selects CID depending on selected child
                 selectChild_button(child_selected);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                String date_chosen = sdf.format(nowday);
-                checkDay_on_state_change(date_chosen); // can remove???????? A[I think this can be removed]
+                //checkDay_on_state_change(date_chosen); // can remove???????? A[I think this can be removed]
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -138,8 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Initialises graph view
         GraphView graph = (GraphView) findViewById(R.id.graph);
-        series = new LineGraphSeries<>();
-        graph.addSeries(series);
+
 
 
         TextView P_username = (TextView) findViewById(R.id.username_view);
@@ -150,13 +142,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewport.setYAxisBoundsManual(true);
         viewport.setMinY(0);
         viewport.setMaxY(50);
-        viewport.setMinX(00);
-        viewport.setMaxX(10);
+        viewport.setMinX(-10);
+        viewport.setMaxX(0);
         viewport.setScrollable(true);
         viewport.setScalable(true);
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Weeks ago");
         graph.getGridLabelRenderer().setVerticalAxisTitle("Severity of Eczema (POEM)");
-
+        // use static labels for horizontal and vertical labels
+        StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
+        staticLabelsFormatter.setHorizontalLabels(new String[] {"10","9","8","7","6","5","4","3","2","1","0"});
+        graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
 
     }
@@ -227,6 +222,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Value.setText("Child name:\t\t\t" + "\nAge:\t\t\t" + "\nHeight (cm):\t\t\t" + "\nWeight (kg):\t\t\t");
         Data = (TextView) findViewById(R.id.Data);
         Data.setText(C.getName() + "\n" + C.getAge() + "\n" + C.getHeight() + "\n" + C.getWeight());
+
+
+        // we're going to simulate real time with thread that append data to the graph
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+                Calendar calendar = Calendar.getInstance();
+                try{
+                    calendar.setTime(sdf.parse(date_chosen));
+                } catch(ParseException e){
+                    e.printStackTrace();
+                }
+                calendar.add(Calendar.DAY_OF_MONTH, -70);
+                lastX = -10;
+                GraphView graph = (GraphView) findViewById(R.id.graph);
+                graph.removeAllSeries();
+                LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+                graph.addSeries(series);
+                // we add 10 new entries
+                for (int i = 0; i < 10; i++) {
+                    //start live plotting with current date
+                    int runningTot = 0;
+                    for (int j = 0; j <= 6; j++) { //for loop takes in 7 days and plots 1 datapoint
+                        //should find a way to -1 to every date until 7 days and then plot 1 datapoint
+                        runningTot = runningTot + get_answers();
+                        calendar.add(Calendar.DAY_OF_MONTH, +1);
+                        date_chosen = sdf.format(calendar.getTime());
+                    }
+
+                    final int final_value = runningTot;
+                    series.appendData(new DataPoint(lastX++, final_value), false, 11);
+
+                }
+            }
+        }).start();
     }
 
     // NOTE TO SELF: Create signup activity
@@ -299,64 +330,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        // we're going to simulate real time with thread that append data to the graph
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
-                String currentDateandTime = sdf.format(new Date());
-                date_chosen = currentDateandTime;
-                int runningTot = display_answers();
-                System.out.println("Initial Running Total:\t" + runningTot);
-                //int lastX = 0;
-
-                // we add 3 new entries
-                for (int i = 0; i < 10; i++) {
-                    //start live plotting with current date
-                    for (int j = 0; j < 6; j++) { //for loop takes in 7 days and plots 1 datapoint
-                        //should find a way to -1 to every date until 7 days and then plot 1 datapoint
-                        Calendar c = Calendar.getInstance();
-                        try{
-                            c.setTime(sdf.parse(date_chosen));
-                        } catch(ParseException e){
-                            e.printStackTrace();
-                        }
-                        c.add(Calendar.DAY_OF_MONTH, -1);
-                        date_chosen = sdf.format(c.getTime());
-
-                        runningTot = runningTot + display_answers();
-                        System.out.println("Running Total:\t" + runningTot);
-                        //lastX++;
-                    }
-
-                    final int final_value = runningTot;
-                    runningTot = 0;
-                    //final int final_X = lastX;
-                    System.out.println("PLOTPLOTPLOTTTTTT\t:\t" + final_value);
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //y_val = final_value;
-                            series.appendData(new DataPoint(lastX++, final_value), false, 50);
-                            System.out.println("GRAPHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\t:\t" + final_value);
-                            System.out.println("GRAPHHH XXXX\t:\t" + lastX);
-                        }
-                    });
-                }
-            }
-        }).start();
-
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //Function to retrieve data from database and plot live
 
-    public int display_answers() {
+    public int get_answers() {
         int total_sum = 0;
         try {
             if (checkDay_on_state_change(date_chosen)) {
-                new_data = false;
                 // Converts 1 and 0 into int variable array
                 for (int i = 0; i<MainActivity.D.answers.length(); i++) {
                     if(MainActivity.D.answers.charAt(i) == '1') {
@@ -366,7 +348,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             } else {
-                new_data = true;
                 for (int i = 0; i < togglers.length; i++){
                     togglers[i] = 0;
                 }
@@ -387,11 +368,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Passes on Statement s to day and retrieve data for selected day
     public static boolean checkDay_on_state_change(String date) throws SQLException {
         if (D.check(C.getChild_ID(), P.getParent_ID(), date, s)){
-            System.out.println("Answers for selected date:\t" + D.answers);
             // displays at editText on Android Studio
             return true;
         } else {
-            System.out.println("This day is empty");
             return false;
         }
     }
