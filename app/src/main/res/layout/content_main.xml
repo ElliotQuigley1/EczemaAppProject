@@ -35,6 +35,7 @@
             android:layout_marginTop="48dp"
             android:text="Value"
             android:textAlignment="viewStart"
+            android:textColor="@android:color/black"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -68,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="216dp"
             android:text="Score:"
+            android:textColor="@android:color/black"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -80,6 +82,7 @@
             android:layout_marginEnd="20dp"
             android:text="Data"
             android:textAlignment="viewEnd"
+            android:textColor="@android:color/black"
             android:textSize="24sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/Value"
             app:layout_constraintEnd_toEndOf="parent" />
