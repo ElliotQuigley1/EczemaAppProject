@@ -2,12 +2,13 @@ package com.example.calendarattempt4;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 
-public class Delete_child extends AppCompatActivity {
+public class Delete_child extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

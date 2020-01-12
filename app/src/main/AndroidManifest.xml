@@ -14,11 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Child_info"></activity>
-        <activity android:name=".Delete_child" />
+        <activity android:name=".Log_in" />
+        <activity android:name=".Child_info" />
         <activity
-            android:name=".ui.ui.login.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:name=".Delete_child"
+            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
