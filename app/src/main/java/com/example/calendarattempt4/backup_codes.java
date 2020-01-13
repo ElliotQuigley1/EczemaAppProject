@@ -8,11 +8,28 @@ public class backup_codes {
 
 
     /*
+    //parent.java
+    // Checks if account already exists and creates new account if not
+    public boolean signup(String username, String password, String email) throws SQLException {
+        String sqlStr = "SELECT PID FROM parents WHERE username =\'" + username + "\' or email = \'" + email + "\';";
+        ResultSet rset = s.executeQuery(sqlStr);
+        while (rset.next()) {
+            AUTH = rset.getString("PID");
+        }
+        if (AUTH != null) {
+            // Returns status to main class to show user message
+            return false;
+        } else {
+            sqlStr = "insert into parents (username,password,email) values(\'" + username + "\',\'" + password + "\',\'" + email + "\');";
+            s.execute(sqlStr);
+            // Returns status to main class to show user message
+            return true;
+        }
+    }
 
 
 
-
-
+//MAIN
         // NOTE TO SELF: Create signup activity
     private void signup_button(String userName_from_app, String password_from_app, String email_from_app) throws SQLException {
         if (P.signup(userName_from_app, password_from_app, email_from_app) == false){

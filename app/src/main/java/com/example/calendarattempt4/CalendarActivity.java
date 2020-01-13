@@ -123,10 +123,10 @@ public class CalendarActivity extends AppCompatActivity {
             if (MainActivity.getD().check(MainActivity.getC().getChild_ID(), MainActivity.getP().getParent_ID(), date, MainActivity.getDb().getConnection())) {
                 new_data = false;
                 // Converts 1 and 0 into boolean variable array
-                for (int i = 0; i< MainActivity.getD().answers.length(); i++) {
-                    if(MainActivity.getD().answers.charAt(i) == '1') {
+                for (int i = 0; i< MainActivity.getD().getAnswers().length(); i++) {
+                    if(MainActivity.getD().getAnswers().charAt(i) == '1') {
                         togglers[i] = true;
-                    } else if (MainActivity.getD().answers.charAt(i) == '0') {
+                    } else if (MainActivity.getD().getAnswers().charAt(i) == '0') {
                         togglers[i] = false;
                     }
                 }
@@ -151,11 +151,11 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         // Display image
-        if (MainActivity.getD().image != null) {
-            Bitmap photo = convert(MainActivity.getD().image);
+        if (MainActivity.getD().getImage() != null) {
+            Bitmap photo = convert(MainActivity.getD().getImage());
             imageView.setImageBitmap(photo);
             image_taken = true;
-            image_string = MainActivity.getD().image;
+            image_string = MainActivity.getD().getImage();
         } else {
             imageView.setImageResource(R.drawable.ic_menu_gallery);
         }

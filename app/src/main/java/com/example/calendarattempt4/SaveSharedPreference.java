@@ -2,11 +2,6 @@ package com.example.calendarattempt4;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 public class SaveSharedPreference {
@@ -15,27 +10,27 @@ public class SaveSharedPreference {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public static void setUserName(Context context, String username)
-    {
+    // Sets parent account username to system file
+    public static void setUserName(Context context, String username) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putString("username", username);
         editor.commit();
     }
 
-    public static String getUserName(Context context)
-    {
+    // Sets parent account password to system file
+    public static String getUserName(Context context) {
         return getSharedPreferences(context).getString("username", "");
     }
 
-    public static void setPassword(Context context, String password)
-    {
+    // Gets parent account username on system file
+    public static void setPassword(Context context, String password) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putString("password", password);
         editor.commit();
     }
 
-    public static String getPassword(Context context)
-    {
+    // Gets parent account password on system file
+    public static String getPassword(Context context) {
         return getSharedPreferences(context).getString("password", "");
     }
 }

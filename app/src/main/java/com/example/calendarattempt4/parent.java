@@ -19,65 +19,11 @@ public class parent {
     // Statement to connect to Postgresql
     private Statement s;
 
-
-    // HARD CODED DATA
-    // USED FOR DEVELOPMENT
-    // REAL DATA WILL BE OBTAINED WITH PARENT LOG IN
-    // WILL BE DELETED BEFORE SUBMITTING
-    public parent() {}
-
     // Passes on Statement s to parent
-    public void connect(Statement s) {
+    public void setS(Statement s) {
         this.s = s;
     }
-
-    // Retrieves info associated with parent login credentials and return state to main class
-    public boolean login(String username, String password) throws SQLException {
-        setUsername(username);
-        setPassword(password);
-        String sqlStr = "SELECT PID, email, Child_num, Child_ID_1, Child_ID_2, Child_ID_3  FROM parents WHERE username =\'" + username + "\' and password = \'" + password + "\';";
-        ResultSet rset = s.executeQuery(sqlStr);
-        AUTH = null;
-        while (rset.next()) {
-            setParent_ID(rset.getInt("PID"));
-            setEmail(rset.getString("email"));
-            AUTH = rset.getString("PID");
-            setChild_num(rset.getInt("Child_num"));
-            setCID_1(rset.getInt("Child_ID_1"));
-            setCID_2(rset.getInt("Child_ID_2"));
-            setCID_3(rset.getInt("Child_ID_3"));
-        }
-
-        if (AUTH == null) {
-            // Returns status to main class to show user message
-            return false;
-        } else {
-            // Returns status to main class to show user message
-            return true;
-        }
-    }
-
-    // Checks if account already exists and creates new account if not
-    public boolean signup(String username, String password, String email) throws SQLException {
-        String sqlStr = "SELECT PID FROM parents WHERE username =\'" + username + "\' or email = \'" + email + "\';";
-        ResultSet rset = s.executeQuery(sqlStr);
-        while (rset.next()) {
-            AUTH = rset.getString("PID");
-        }
-        if (AUTH != null) {
-            // Returns status to main class to show user message
-            return false;
-        } else {
-            sqlStr = "insert into parents (username,password,email) values(\'" + username + "\',\'" + password + "\',\'" + email + "\');";
-            s.execute(sqlStr);
-            // Returns status to main class to show user message
-            return true;
-        }
-    }
-
-
-
-
+    // Setters and Getters
     public void setParent_ID(int parent_ID) { this.parent_ID = parent_ID; }
     public void setUsername(String username) { this.username = username; }
     public void setPassword(String password) { this.password = password; }
@@ -86,7 +32,6 @@ public class parent {
     public void setCID_1(int CID_1) { this.CID_1 = CID_1; }
     public void setCID_2(int CID_2) { this.CID_2 = CID_2; }
     public void setCID_3(int CID_3) { this.CID_3 = CID_3; }
-
     public int getParent_ID() {
         return parent_ID;
     }
@@ -108,6 +53,38 @@ public class parent {
     }
     public int getCID_3() {
         return CID_3;
+    }
+
+    public parent() {}
+
+
+    // Retrieves info associated with parent login credentials and return state to main class
+    public boolean login(String username, String password) throws SQLException {
+        // Sets credentials
+        setUsername(username);
+        setPassword(password);
+        // Checks credentials with database
+        String sqlStr = "SELECT PID, email, Child_num, Child_ID_1, Child_ID_2, Child_ID_3  FROM parents WHERE username =\'" + username + "\' and password = \'" + password + "\';";
+        ResultSet rset = s.executeQuery(sqlStr);
+        AUTH = null;
+        while (rset.next()) {
+            // Set data from database
+            setParent_ID(rset.getInt("PID"));
+            setEmail(rset.getString("email"));
+            setChild_num(rset.getInt("Child_num"));
+            setCID_1(rset.getInt("Child_ID_1"));
+            setCID_2(rset.getInt("Child_ID_2"));
+            setCID_3(rset.getInt("Child_ID_3"));
+            // Check if data is empty
+            AUTH = rset.getString("PID");
+        }
+        if (AUTH == null) {
+            // Returns status to main class to show user message
+            return false;
+        } else {
+            // Returns status to main class to show user message
+            return true;
+        }
     }
 
 
