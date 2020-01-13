@@ -15,16 +15,36 @@ public class child extends MainActivity{
     // Statement to connect to Postgresql
     protected Statement s;
 
+    // Setters and Getters
+    public void setChild_ID(int child_ID) { this.child_ID = child_ID; }
+    public void setParent_ID(int parent_ID) { this.parent_ID = parent_ID; }
+    public void setName(String name) { this.name = name; }
+    public void setAge(int age) { this.age = age; }
+    public void setWeight(int weight) { this.weight = weight; }
+    public void setHeight(int height) { this.height = height; }
+    public void setS(Statement s) {
+        this.s = s;
+    }
+    public int getChild_ID() { return child_ID; }
+    public int getParent_ID() { return parent_ID; }
+    public String getName() { return name; }
+    public int getAge() { return age; }
+    public int getWeight() { return weight; }
+    public int getHeight() { return height; }
+    public Statement getS() {
+        return s;
+    }
+
     public child(){}
 
     // Retrieves CHILD's data with pre-selected CHILD ID, and then saves data into variables
     public void connect(Statement s, int parent_ID, int child_num) throws SQLException {
-        this.s = s;
+        setS(s);
         // Gets CHILD ID using selected CHILD from specific PARENT
         String sqlStr = "SELECT Child_ID_"+child_num+" FROM parents WHERE PID =\'"+parent_ID+"\';";
         ResultSet rset=s.executeQuery(sqlStr);
         while(rset.next()) {
-            this.child_ID = rset.getInt("Child_ID_"+child_num);
+            setChild_ID(rset.getInt("Child_ID_"+child_num));
         }
 
         // Gets CHILD's data using CHILD ID
@@ -37,7 +57,7 @@ public class child extends MainActivity{
             setWeight(rset.getInt("weight"));
             setHeight(rset.getInt("height"));
         }
-        this.parent_ID = parent_ID;
+        setParent_ID(parent_ID);
     }
 
 
@@ -54,7 +74,7 @@ public class child extends MainActivity{
         if (AUTH != null){
             // Returns status to main class to show user message
             return false;
-        }else{
+        } else {
             sqlStr = "insert into children (child_name,PID,age,weight,height) values(\'"+new_name+"\',\'"+PID+"\',\'"+age+"\',\'"+weight+"\',\'"+height+"\');";
             // Creates child info
             s.execute (sqlStr);
@@ -65,10 +85,11 @@ public class child extends MainActivity{
             while(rset.next()) {
                 setChild_ID(rset.getInt("CID"));
             }
-
+            // Add 1 to number of children
             int updated_child_num = MainActivity.getP().getChild_num() +1;
             sqlStr = "UPDATE parents SET child_num = \'" + updated_child_num + "\' WHERE PID=\'" + getParent_ID() + "\';";
             s.execute (sqlStr);
+            // Add CID to parent database
             sqlStr = "UPDATE parents SET child_id_" + updated_child_num + " = \'" + getChild_ID() + "\' WHERE PID=\'" + getParent_ID() + "\';";
             s.execute (sqlStr);
             // Returns status to main class to show user message
@@ -78,30 +99,17 @@ public class child extends MainActivity{
 
     public void delete() {
         try {
+            // Delete from child databse with corresponding CID
             String sqlStr = "DELETE FROM children WHERE CID=\'" + getChild_ID() + "\';";
             s.execute (sqlStr);
+            // Minus 1 to number of children
             int updated_child_num = MainActivity.getP().getChild_num()-1;
             sqlStr = "UPDATE parents SET child_num = \'" + updated_child_num + "\' WHERE PID=\'" + getParent_ID() + "\';";
             s.execute (sqlStr);
+            // Remove CID from parent database
             sqlStr = "DELETE child_id_" + MainActivity.getChild_selected() + " FROM parents WHERE PID=\'" + getParent_ID() + "\';";
             s.execute (sqlStr);
-
         } catch (Exception e) {
         }
     }
-
-
-    public void setChild_ID(int child_ID) { this.child_ID = child_ID; }
-    public void setParent_ID(int parent_ID) { this.parent_ID = parent_ID; }
-    public void setName(String name) { this.name = name; }
-    public void setAge(int age) { this.age = age; }
-    public void setWeight(int weight) { this.weight = weight; }
-    public void setHeight(int height) { this.height = height; }
-    public int getChild_ID() { return child_ID; }
-    public int getParent_ID() { return parent_ID; }
-    public String getName() { return name; }
-    public int getAge() { return age; }
-    public int getWeight() { return weight; }
-    public int getHeight() { return height; }
-
 }

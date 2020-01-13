@@ -22,6 +22,7 @@ public class Delete_child extends Activity {
     }
 
     public void no_button(View view) {
+        // returns to previous activity
         Intent intent = new Intent(Delete_child.this, MainActivity.class);
         startActivity(intent);
     }

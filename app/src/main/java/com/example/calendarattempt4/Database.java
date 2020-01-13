@@ -11,15 +11,21 @@ public class Database {
     protected Connection conn;
     protected Statement s;
 
+    // Return Statement s to main class
+    public Statement getConnection() {
+        return this.s;
+    }
+
     // Initiates connection to database and return status
     public boolean connect()  {
         try {
+            // Check if device SDK is supported
             if (android.os.Build.VERSION.SDK_INT > 9)
             {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
             }
-            // Registers the drive
+            // Registers the driver
             Class.forName("org.postgresql.Driver");
             conn= DriverManager.getConnection(dbUrl);
             this.s=conn.createStatement();
@@ -37,10 +43,5 @@ public class Database {
             System.out.println("Could not connect to the database");
             return false;
         }
-    }
-
-    // Return Statement s to main class
-    public Statement getConnection() {
-        return this.s;
     }
 }

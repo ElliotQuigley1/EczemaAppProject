@@ -1,10 +1,12 @@
+/*
+Imperial College Biomedical Engineering Programing Group Project
+Developed by Alex McKinnon, Elliot Quigley, Julia Gimbernat, Ronald Hsu
+With the help of official Android Studio documentation and GraphView support by jjoe64
+*/
 package com.example.calendarattempt4;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
@@ -13,33 +15,23 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-
 import android.view.MenuItem;
 import android.widget.TextView;
-
 import java.util.Locale;
 import java.util.Calendar;
-
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import com.google.android.material.navigation.NavigationView;
-
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import android.view.Menu;
-import android.widget.Button;
 import android.widget.Toast;
-
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -93,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Connects Database and displays relevant parent & child info
         if (db.connect()) {
             // Passes on Statement s to parent
-            P.connect(db.getConnection());
+            P.setS(db.getConnection());
             // Logs in with saved account credentials to retrieve data
             try {
                 P.login(SaveSharedPreference.getUserName(MainActivity.this), SaveSharedPreference.getPassword(MainActivity.this));
@@ -302,10 +294,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             if (D.check(C.getChild_ID(), P.getParent_ID(), date, db.getConnection())) {
                 // Converts 1 and 0 into int variable array
-                for (int i = 0; i < MainActivity.D.answers.length(); i++) {
-                    if (MainActivity.D.answers.charAt(i) == '1') {
+                for (int i = 0; i < MainActivity.D.getAnswers().length(); i++) {
+                    if (MainActivity.D.getAnswers().charAt(i) == '1') {
                         togglers[i] = 1;
-                    } else if (MainActivity.D.answers.charAt(i) == '0') {
+                    } else if (MainActivity.D.getAnswers().charAt(i) == '0') {
                         togglers[i] = 0;
                     }
                 }
