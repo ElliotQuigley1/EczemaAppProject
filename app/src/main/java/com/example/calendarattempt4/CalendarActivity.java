@@ -25,23 +25,21 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import static com.example.calendarattempt4.MainActivity.checkDay_on_state_change;
 
 
 public class CalendarActivity extends AppCompatActivity {
     // Declares view objects
-    private CalendarView mCalendarView;
-    private String date_chosen;
     private Button entry_button;
     // Declares array for icons state
     private boolean image_taken = false;
     private boolean new_data = true;
     private boolean togglers[] = {false,false,false,false,false,false,false,false};
-    int[] R_id_array = {R.id.imageView_cracking,R.id.imageView_dry,R.id.imageView_oozing,R.id.imageView_bleeding,R.id.imageView_flaking,R.id.imageView_itchy,R.id.imageView_medicine,R.id.imageView_ointment};
-    int[] drawable = {R.drawable.cracking,R.drawable.dry,R.drawable.oozing,R.drawable.bleeding,R.drawable.flaking,R.drawable.itchy,R.drawable.medicine,R.drawable.ointment};
-    int[] drawable_clicked = {R.drawable.cracking_clicked,R.drawable.dry_clicked,R.drawable.oozing_clicked,R.drawable.bleeding_clicked,R.drawable.flaking_clicked,R.drawable.itchy_clicked,R.drawable.medicine_clicked,R.drawable.ointment_clicked};
+    private int[] R_id_array = {R.id.imageView_cracking,R.id.imageView_dry,R.id.imageView_oozing,R.id.imageView_bleeding,R.id.imageView_flaking,R.id.imageView_itchy,R.id.imageView_medicine,R.id.imageView_ointment};
+    private int[] drawable = {R.drawable.cracking,R.drawable.dry,R.drawable.oozing,R.drawable.bleeding,R.drawable.flaking,R.drawable.itchy,R.drawable.medicine,R.drawable.ointment};
+    private int[] drawable_clicked = {R.drawable.cracking_clicked,R.drawable.dry_clicked,R.drawable.oozing_clicked,R.drawable.bleeding_clicked,R.drawable.flaking_clicked,R.drawable.itchy_clicked,R.drawable.medicine_clicked,R.drawable.ointment_clicked};
     // Declares camera function parameters
     private static final int CAMERA_REQUEST = 1888;
+    // ImageView object to display images taken by parent
     private ImageView imageView;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     private String image_string = null;
@@ -50,9 +48,8 @@ public class CalendarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Hides header bar to give more space
         this.getSupportActionBar().hide();
-
-
         setContentView(R.layout.activity_calendar_layout);
 
         // Camera OnClickListener
@@ -63,6 +60,7 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
+                // Ask for camera permission during first use of app
                 if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
                 {
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
@@ -76,24 +74,28 @@ public class CalendarActivity extends AppCompatActivity {
         });
 
         // Calendar OnClickListener
-        mCalendarView = findViewById(R.id.calendar_view);
+        CalendarView mCalendarView = findViewById(R.id.calendar_view);
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView CalendarView, int year, int month, int dayOfMonth) {
+                // Outputted month scales from 0-11
                 month = month +1;
+                // Adds 0 in front of single digit numbers
                 String month_formatted = String.format("%02d", month);
                 String date_formatted = String.format("%02d", dayOfMonth);
                 String date = year + "/" + month_formatted + "/"+ date_formatted ;
-                date_chosen = date;
                 image_taken = false;
-                display_answers();
+                // Refreshes icons and images of selected date
+                display_answers(date);
             }
         });
 
         // Icons OnClickListener
         for (int i = 0; i<togglers.length; i++) {
+            // Dummy variable since i is non-static
             final int j = i;
             ImageView imgview = findViewById(R_id_array[i]);
+            // Toggles icon selected state
             imgview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view){
@@ -109,23 +111,22 @@ public class CalendarActivity extends AppCompatActivity {
 
         // Initial icon state for current date
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        date_chosen = sdf.format(new Date(mCalendarView.getDate()));
-        display_answers();
+        display_answers(sdf.format(new Date(mCalendarView.getDate())));
 
     }
 
 
     // Saves answer from database into variable
-    public void display_answers() {
+    public void display_answers(String date) {
         try {
             entry_button = findViewById(R.id.entry_button);
-            if (checkDay_on_state_change(date_chosen)) {
+            if (MainActivity.getD().check(MainActivity.getC().getChild_ID(), MainActivity.getP().getParent_ID(), date, MainActivity.getDb().getConnection())) {
                 new_data = false;
                 // Converts 1 and 0 into boolean variable array
-                for (int i = 0; i<MainActivity.D.answers.length(); i++) {
-                    if(MainActivity.D.answers.charAt(i) == '1') {
+                for (int i = 0; i< MainActivity.getD().answers.length(); i++) {
+                    if(MainActivity.getD().answers.charAt(i) == '1') {
                         togglers[i] = true;
-                    } else if (MainActivity.D.answers.charAt(i) == '0') {
+                    } else if (MainActivity.getD().answers.charAt(i) == '0') {
                         togglers[i] = false;
                     }
                 }
@@ -149,9 +150,11 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         // Display image
-        if (MainActivity.D.image != null) {
-            Bitmap photo = convert(MainActivity.D.image);
+        if (MainActivity.getD().image != null) {
+            Bitmap photo = convert(MainActivity.getD().image);
             imageView.setImageBitmap(photo);
+            image_taken = true;
+            image_string = MainActivity.getD().image;
         } else {
             imageView.setImageResource(R.drawable.ic_menu_gallery);
         }
@@ -186,9 +189,10 @@ public class CalendarActivity extends AppCompatActivity {
         }
         try {
             if (new_data) {
-                MainActivity.makeDay(score, image_string);
+                MainActivity.getD().create(score, image_string);
+
             } else {
-                MainActivity.rewriteDay(score, image_string);
+                MainActivity.getD().update(score, image_string);
             }
             // Shows user message for success / failure
             Toast.makeText(this, "Data saved", Toast.LENGTH_SHORT).show();

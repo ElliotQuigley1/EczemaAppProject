@@ -1,7 +1,5 @@
 package com.example.calendarattempt4;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +15,8 @@ public class Delete_child extends Activity {
     }
 
     public void yes_button(View view) {
-        MainActivity.C.delete();
+        // Deletes child data from database
+        MainActivity.getC().delete();
         Intent intent = new Intent(Delete_child.this, MainActivity.class);
         startActivity(intent);
     }
