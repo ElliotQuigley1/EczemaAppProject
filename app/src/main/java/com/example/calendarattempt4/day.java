@@ -61,13 +61,23 @@ public class day {
     public void update(String answers, String image) throws SQLException {
         String sqlStr = "UPDATE dates SET record = \'" + answers + "\' WHERE DID = \'" + getDay_ID() +"\';";
         s.execute (sqlStr);
-        sqlStr = "UPDATE dates SET image = \'" + image + "\' WHERE DID = \'" + getDay_ID() +"\';";
+        if (image == null) {
+            sqlStr = "UPDATE dates SET image = " + image + " WHERE DID = \'" + getDay_ID() +"\';";
+        } else {
+            sqlStr = "UPDATE dates SET image = \'" + image + "\' WHERE DID = \'" + getDay_ID() +"\';";
+        }
         s.execute (sqlStr);
     }
 
     // Create answers for new date
     public void create(String answers, String image) throws SQLException {
-        String sqlStr = "INSERT INTO public.dates(cid, pid, date, record, image) VALUES (\'"+ getChild_ID() +"\',\'"+ getParent_ID() +"\',\'"+ getDate() +"\',\'"+ answers +"\',\'" + image + "\');";
+        String sqlStr;
+        if (image == null) {
+            sqlStr = "INSERT INTO public.dates(cid, pid, date, record, image) VALUES (\'"+ getChild_ID() +"\',\'"+ getParent_ID() +"\',\'"+ getDate() +"\',\'"+ answers +"\'," + image + ");";
+
+        } else  {
+            sqlStr = "INSERT INTO public.dates(cid, pid, date, record, image) VALUES (\'"+ getChild_ID() +"\',\'"+ getParent_ID() +"\',\'"+ getDate() +"\',\'"+ answers +"\',\'" + image + "\');";
+        }
         s.execute (sqlStr);
     }
 }

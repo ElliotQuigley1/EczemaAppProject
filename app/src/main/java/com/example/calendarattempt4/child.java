@@ -66,7 +66,7 @@ public class child extends MainActivity{
                 setChild_ID(rset.getInt("CID"));
             }
 
-            int updated_child_num = MainActivity.P.getChild_num() +1;
+            int updated_child_num = MainActivity.getP().getChild_num() +1;
             sqlStr = "UPDATE parents SET child_num = \'" + updated_child_num + "\' WHERE PID=\'" + getParent_ID() + "\';";
             s.execute (sqlStr);
             sqlStr = "UPDATE parents SET child_id_" + updated_child_num + " = \'" + getChild_ID() + "\' WHERE PID=\'" + getParent_ID() + "\';";
@@ -80,10 +80,10 @@ public class child extends MainActivity{
         try {
             String sqlStr = "DELETE FROM children WHERE CID=\'" + getChild_ID() + "\';";
             s.execute (sqlStr);
-            int updated_child_num = MainActivity.P.getChild_num()-1;
+            int updated_child_num = MainActivity.getP().getChild_num()-1;
             sqlStr = "UPDATE parents SET child_num = \'" + updated_child_num + "\' WHERE PID=\'" + getParent_ID() + "\';";
             s.execute (sqlStr);
-            sqlStr = "DELETE child_id_" + MainActivity.child_selected + " FROM parents WHERE PID=\'" + getParent_ID() + "\';";
+            sqlStr = "DELETE child_id_" + MainActivity.getChild_selected() + " FROM parents WHERE PID=\'" + getParent_ID() + "\';";
             s.execute (sqlStr);
 
         } catch (Exception e) {

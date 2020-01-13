@@ -24,7 +24,7 @@ public class Log_in extends AppCompatActivity {
         TextView password_input = (TextView) findViewById(R.id.password_input);
         String password_string = password_input.getText().toString();
         try {
-            if (MainActivity.LogIn_button(username_string,password_string)){
+            if (MainActivity.getP().login(username_string, password_string)){
                 Toast.makeText(this, "LOGGED IN: " + username_string, Toast.LENGTH_SHORT).show();
                 SaveSharedPreference.setUserName(Log_in.this,username_string);
                 SaveSharedPreference.setPassword(Log_in.this,password_string);
