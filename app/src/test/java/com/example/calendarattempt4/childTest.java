@@ -78,4 +78,29 @@ public class childTest {
         Assert.assertEquals(C.getWeight(), 40);
         Assert.assertEquals(C.getHeight(),143);
     }
+
+    @Test
+    public void testCreate(){
+        child C = new child();
+        int Parent_ID = 1000;
+        C.setParent_ID(Parent_ID);
+        Database DB = new Database();
+        DB.connect();
+        Statement S = DB.getConnection();
+        String name = "Bobby";
+        int age = 1000, height = 1000, weight = 1000;
+
+        try { C.create(name, age, height, weight);
+        } catch (SQLException e) { e.printStackTrace(); }
+
+        try { C.connect(S, Parent_ID,1);
+        } catch (SQLException e) { e.printStackTrace(); }
+
+        Assert.assertEquals(C.getName(),"Bobby");
+        Assert.assertEquals(C.getAge(), 1000);
+        Assert.assertEquals(C.getWeight(), 1000);
+        Assert.assertEquals(C.getHeight(),1000);
+
+        C.delete();
+    }
 }
