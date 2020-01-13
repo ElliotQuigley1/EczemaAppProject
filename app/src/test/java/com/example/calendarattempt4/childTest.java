@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import static org.junit.Assert.*;
 
@@ -59,17 +60,23 @@ public class childTest {
     }
 
 
-    /*@Test
+    @Test
     public void testConnect(){
         child C = new child();
         String Jason = "Jason Doe";
-        int MrsDoe = 1;
+        int MrsDoe = 1, child_num=1;
+        Database DB = new Database();
+        DB.connect();
+        Statement S = DB.getConnection();
         try {
-            Assert.assertEquals(C.create(Jason,MrsDoe), true);
+            C.connect(S, MrsDoe, child_num);
         } catch (SQLException e) {
-            //Assert.assertEquals(1,2);
             e.printStackTrace();
         }
+        Assert.assertEquals(C.getName(),"Jason Doe");
+        Assert.assertEquals(C.getAge(), 13);
+        Assert.assertEquals(C.getWeight(), 40);
+        Assert.assertEquals(C.getHeight(),143);
 
-    }*/
+    }
 }
