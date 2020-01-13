@@ -28,11 +28,10 @@ import androidx.annotation.NonNull;
 
 
 public class CalendarActivity extends AppCompatActivity {
-    // Declares view objects
-    private Button entry_button;
-    // Declares array for icons state
+    // Variable to save state of specific date data state
     private boolean image_taken = false;
     private boolean new_data = true;
+    // Declares array for icons state
     private boolean togglers[] = {false,false,false,false,false,false,false,false};
     private int[] R_id_array = {R.id.imageView_cracking,R.id.imageView_dry,R.id.imageView_oozing,R.id.imageView_bleeding,R.id.imageView_flaking,R.id.imageView_itchy,R.id.imageView_medicine,R.id.imageView_ointment};
     private int[] drawable = {R.drawable.cracking,R.drawable.dry,R.drawable.oozing,R.drawable.bleeding,R.drawable.flaking,R.drawable.itchy,R.drawable.medicine,R.drawable.ointment};
@@ -119,7 +118,8 @@ public class CalendarActivity extends AppCompatActivity {
     // Saves answer from database into variable
     public void display_answers(String date) {
         try {
-            entry_button = findViewById(R.id.entry_button);
+            Button entry_button = findViewById(R.id.entry_button);
+            // Checks if selected date has record on database
             if (MainActivity.getD().check(MainActivity.getC().getChild_ID(), MainActivity.getP().getParent_ID(), date, MainActivity.getDb().getConnection())) {
                 new_data = false;
                 // Converts 1 and 0 into boolean variable array
@@ -132,6 +132,7 @@ public class CalendarActivity extends AppCompatActivity {
                 }
                 entry_button.setBackgroundColor(0xFF8D8D8D);
                 entry_button.setText("UPDATE ENTRY");
+                // Sets all icons to unselected since there is no data on database
             } else {
                 new_data = true;
                 for (int i = 0; i < togglers.length; i++){
@@ -238,13 +239,12 @@ public class CalendarActivity extends AppCompatActivity {
         }
     }
 
-    public static Bitmap convert(String base64Str) throws IllegalArgumentException
+    public static Bitmap convert(String string_64) throws IllegalArgumentException
     {
         byte[] decodedBytes = Base64.decode(
-                base64Str.substring(base64Str.indexOf(",")  + 1),
+                string_64.substring(string_64.indexOf(",")  + 1),
                 Base64.DEFAULT
         );
-
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
@@ -252,7 +252,6 @@ public class CalendarActivity extends AppCompatActivity {
     {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-
         return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
     }
 

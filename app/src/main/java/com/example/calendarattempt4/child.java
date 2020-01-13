@@ -42,9 +42,9 @@ public class child extends MainActivity{
 
 
     // Checks if Child name already exists and creates new child if not
-    public boolean create(String new_name, int age, int height, int weight) throws SQLException {
+    public boolean create(String new_name, int age, int height, int weight, int PID) throws SQLException {
         // Gets CHILD ID using CHILD's name and PARENT ID
-        String sqlStr = "SELECT CID FROM children WHERE child_name =\'"+new_name+"\' and PID = \'"+parent_ID+"\';";
+        String sqlStr = "SELECT CID FROM children WHERE child_name =\'"+new_name+"\' and PID = \'"+PID+"\';";
         ResultSet rset=s.executeQuery(sqlStr);
         AUTH = null;
         // If no there is no matching CHILD ID, then return false
@@ -55,11 +55,11 @@ public class child extends MainActivity{
             // Returns status to main class to show user message
             return false;
         }else{
-            sqlStr = "insert into children (child_name,PID,age,weight,height) values(\'"+new_name+"\',\'"+parent_ID+"\',\'"+age+"\',\'"+weight+"\',\'"+height+"\');";
+            sqlStr = "insert into children (child_name,PID,age,weight,height) values(\'"+new_name+"\',\'"+PID+"\',\'"+age+"\',\'"+weight+"\',\'"+height+"\');";
             // Creates child info
             s.execute (sqlStr);
             // Gets newly created child ID
-            sqlStr = "SELECT CID FROM children WHERE child_name =\'"+new_name+"\' and PID = \'"+parent_ID+"\';";
+            sqlStr = "SELECT CID FROM children WHERE child_name =\'"+new_name+"\' and PID = \'"+PID+"\';";
             rset=s.executeQuery(sqlStr);
             // If no there is no matching CHILD ID, then return false
             while(rset.next()) {

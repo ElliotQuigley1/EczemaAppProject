@@ -32,7 +32,7 @@ public class Child_info extends AppCompatActivity {
         }else if(Integer.parseInt(weight.getText().toString()) <=0) {
             weight.setError("Value not valid!");
         } else{
-            if (MainActivity.getC().create(name.getText().toString(), Integer.parseInt(age.getText().toString()), Integer.parseInt(height.getText().toString()), Integer.parseInt(weight.getText().toString())) == false){
+            if (MainActivity.getC().create(name.getText().toString(), Integer.parseInt(age.getText().toString()), Integer.parseInt(height.getText().toString()), Integer.parseInt(weight.getText().toString()), MainActivity.getP().getParent_ID()) == false){
                 Toast.makeText(this, "Child already exists", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Child created", Toast.LENGTH_SHORT).show();
