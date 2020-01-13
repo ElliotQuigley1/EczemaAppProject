@@ -54,7 +54,9 @@ public class child extends MainActivity{
         if (AUTH != null){
             // Returns status to main class to show user message
             return false;
-        }else{
+        }
+        else
+            {
             sqlStr = "insert into children (child_name,PID,age,weight,height) values(\'"+new_name+"\',\'"+parent_ID+"\',\'"+age+"\',\'"+weight+"\',\'"+height+"\');";
             // Creates child info
             s.execute (sqlStr);
